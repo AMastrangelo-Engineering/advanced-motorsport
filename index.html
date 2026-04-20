@@ -60,20 +60,10 @@
     display: flex; align-items: center; gap: 10px;
   }
 
-  /* ===== LOGO: reemplazá el src por la ruta de tu logo cuando lo tengas =====
-     Ejemplo: src="logo/am_engineering_logo.png"
-     Por ahora usa un SVG placeholder con el isotipo AM en verde.
-     CUANDO TENGAS EL LOGO: borrá todo el bloque <svg class="am-logo-placeholder">
-     y descomentá la línea <img class="am-logo-img" ...> de abajo. */
+  /* ===== LOGO DEL ENCABEZADO ===== */
   .am-logo-img {
     height: 38px; width: auto;
-    /* descomentá y usá cuando tengas el archivo: */
-    /* display: block; */
-    display: none;
-  }
-  .am-logo-placeholder {
-    width: 38px; height: 38px;
-    /* Borrá este bloque cuando pongas el logo real */
+    display: block;
   }
 
   .nav-links {
@@ -601,17 +591,9 @@
 <nav id="mainNav">
   <a href="#hero" class="nav-logo">
 
-    <!-- ===== PUNTO 3: LOGO =====
-         OPCIÓN A — Logo como imagen (recomendada cuando tengas el archivo):
-         Subí el logo a la carpeta "logo/" de tu repositorio y descomentá la línea de abajo.
-         Borrá el bloque SVG placeholder que sigue.
+    <!-- ===== PUNTO 3: LOGO ===== -->
+         <img class="am-logo-img" src="logo/am_logo.png" alt="Advanced Motorsport">
 
-         <img class="am-logo-img" src="logo/am_engineering_logo.png" alt="Advanced Motorsport Engineering">
-
-         OPCIÓN B — SVG placeholder (activo por ahora):
-         Este triángulo AM en verde es temporal. Cuando tengas el logo PNG/SVG,
-         reemplazá todo el bloque <svg ...>...</svg> por la etiqueta <img> de arriba.
-    -->
     <svg class="am-logo-placeholder" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="AM logo placeholder">
       <!-- Fondo con clip de velocidad -->
       <rect width="44" height="44" fill="rgba(57,255,20,0.05)" rx="2"/>
@@ -716,7 +698,8 @@
             <div class="te-category">Junior MY10</div>
             <div class="te-event">Campeonato Argentino de Karting</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2021</span></div>
             </div>
           </div>
@@ -734,7 +717,8 @@
             <div class="te-category">Junior MY10</div>
             <div class="te-event">Campeonato Argentino de Karting</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2022</span></div>
             </div>
           </div>
@@ -744,7 +728,8 @@
             <div class="te-category">ProAm</div>
             <div class="te-event">Campeonato Argentino de Karting</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2022</span></div>
             </div>
           </div>
@@ -754,7 +739,8 @@
             <div class="te-category">Micro Max</div>
             <div class="te-event">Rotax Max Buenos Aires Otoño</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2022</span></div>
             </div>
           </div>
@@ -764,7 +750,8 @@
             <div class="te-category">Micro Max</div>
             <div class="te-event">Rotax Max Buenos Aires Invierno</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2022</span></div>
             </div>
           </div>
@@ -774,7 +761,8 @@
             <div class="te-category">Master Max</div>
             <div class="te-event">Rotax Max Buenos Aires Invierno</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2022</span></div>
             </div>
           </div>
@@ -784,7 +772,8 @@
             <div class="te-category">Senior Max</div>
             <div class="te-event">Rotax Max Gran Final Argentina</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2022</span></div>
             </div>
           </div>
@@ -794,7 +783,8 @@
             <div class="te-category">Master Max</div>
             <div class="te-event">Rotax Max Gran Final Argentina</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2022</span></div>
             </div>
           </div>
@@ -812,7 +802,8 @@
             <div class="te-category">Junior 135cc</div>
             <div class="te-event">Prokart Apertura</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2022</span></div>
             </div>
           </div>
@@ -822,7 +813,8 @@
             <div class="te-category">General 135cc</div>
             <div class="te-event">Prokart Apertura</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2022</span></div>
             </div>
           </div>
@@ -832,7 +824,8 @@
             <div class="te-category">Junior 135cc</div>
             <div class="te-event">Prokart Clausura</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2022</span></div>
             </div>
           </div>
@@ -842,7 +835,8 @@
             <div class="te-category">Master A</div>
             <div class="te-event">APAK</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2022</span></div>
             </div>
           </div>
@@ -860,7 +854,8 @@
             <div class="te-category">Junior 135cc</div>
             <div class="te-event">Prokart</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">              
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2024</span></div>
             </div>
           </div>
@@ -870,7 +865,8 @@
             <div class="te-category">General 135cc</div>
             <div class="te-event">Prokart</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">              
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2024</span></div>
             </div>
           </div>
@@ -888,7 +884,8 @@
             <div class="te-category">OK</div>
             <div class="te-event">Sudamericano de Karting FIA</div>
             <div class="te-popup">
-              <div class="te-popup-no-img"><span>Foto próximamente</span></div>
+              <img class="te-popup-img" src="fotos/logros/manta_gran_final_argentina.jpg" alt="Valentino Manta - Gran Final Argentina" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="te-popup-no-img" style="display:none;"><span>Foto próximamente</span></div>
               <div class="te-popup-bar"><span class="te-popup-date">2025</span></div>
             </div>
           </div>
