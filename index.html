@@ -68,13 +68,13 @@
   .am-logo-img {
     height: 38px; width: auto;
     /* descomentá y usá cuando tengas el archivo: */
-    display: block;
-    /* display: none; */
+    /* display: block; */
+    display: none;
   }
-  /*.am-logo-placeholder {
-    width: 38px; height: 38px; */
+  .am-logo-placeholder {
+    width: 38px; height: 38px;
     /* Borrá este bloque cuando pongas el logo real */
-  /*} */
+  }
 
   .nav-links {
     display: flex; align-items: center; gap: 2.5rem;
@@ -488,6 +488,18 @@
     z-index: 0;
   }
 
+  /* A.4 — Estrellas de logros */
+  .piloto-stars {
+    position: absolute; top: 8px; right: 8px;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 2px; z-index: 5;
+  }
+  .star-icon {
+    font-size: 11px; color: #777; line-height: 1;
+    transition: color 0.35s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  }
+  .piloto-card:hover .star-icon,
+  .piloto-card.active .star-icon { color: #DAA520; }
+
   /* ============ CONTACTO ============ */
   #contacto { background: var(--black); position: relative; overflow: hidden; }
   #contacto::before { content: 'AM'; position: absolute; font-family: 'Bebas Neue', sans-serif; font-size: 28vw; color: rgba(57,255,20,0.02); right: -4vw; bottom: -4vw; line-height: 1; pointer-events: none; z-index: 0; }
@@ -588,29 +600,26 @@
 <!-- ======================== NAV ======================== -->
 <nav id="mainNav">
   <a href="#hero" class="nav-logo">
-	  <img class="am-logo-img" src="logo/am_logo.png" alt="Advanced Motorsport">
 
     <!-- ===== PUNTO 3: LOGO =====
          OPCIÓN A — Logo como imagen (recomendada cuando tengas el archivo):
          Subí el logo a la carpeta "logo/" de tu repositorio y descomentá la línea de abajo.
          Borrá el bloque SVG placeholder que sigue.
 
-         <img class="am-logo-img" src="logo/am_logo.png" alt="Advanced Motorsport">
+         <img class="am-logo-img" src="logo/am_engineering_logo.png" alt="Advanced Motorsport Engineering">
 
          OPCIÓN B — SVG placeholder (activo por ahora):
          Este triángulo AM en verde es temporal. Cuando tengas el logo PNG/SVG,
          reemplazá todo el bloque <svg ...>...</svg> por la etiqueta <img> de arriba.
     -->
-    <!--
-		<svg class="am-logo-placeholder" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="AM logo placeholder">
-	      <!-- Fondo con clip de velocidad -->
-	      <!--<rect width="44" height="44" fill="rgba(57,255,20,0.05)" rx="2"/>
-	      <!-- Letras AM estilizadas -->
-	      <!--<text x="4" y="33" font-family="Arial Black, sans-serif" font-size="22" font-weight="900" fill="#39FF14" letter-spacing="-1">AM</text>
-	      <!-- Línea de velocidad diagonal -->
-	      <!--<line x1="0" y1="38" x2="44" y2="28" stroke="#39FF14" stroke-width="1.5" opacity="0.6"/>
-	    </svg>
-	-->
+    <svg class="am-logo-placeholder" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="AM logo placeholder">
+      <!-- Fondo con clip de velocidad -->
+      <rect width="44" height="44" fill="rgba(57,255,20,0.05)" rx="2"/>
+      <!-- Letras AM estilizadas -->
+      <text x="4" y="33" font-family="Arial Black, sans-serif" font-size="22" font-weight="900" fill="#39FF14" letter-spacing="-1">AM</text>
+      <!-- Línea de velocidad diagonal -->
+      <line x1="0" y1="38" x2="44" y2="28" stroke="#39FF14" stroke-width="1.5" opacity="0.6"/>
+    </svg>
 
     ADVANCED MOTORSPORT
   </a>
@@ -1232,7 +1241,7 @@
         <div class="piloto-stars" data-count="1"><span class="star-icon">★</span></div>
       </div>
       <div class="piloto-card" data-logros="1">
-        <img class="piloto-card-photo" src="fotos/pilotos/joaquin_camporino_rossotti.jpg" alt="Joaquin Camporino Rossotti" onerror="this.style.display='none'">
+        <img class="piloto-card-photo" src="fotos/pilotos/joaco_camporino_rossotti.jpg" alt="Joaquin Camporino Rossotti" onerror="this.style.display='none'">
         <div class="piloto-card-overlay"></div>
         <div class="piloto-card-name"><span>Joaquin<br>Camporino Rossotti</span></div>
         <div class="piloto-card-years">2023 — 2024</div>
@@ -1351,13 +1360,19 @@
         <div class="piloto-card-years">2023</div>
 
       </div>
+      <div class="piloto-card" data-logros="0">
+        <img class="piloto-card-photo" src="fotos/pilotos/ramiro_carreira.jpg" alt="Ramiro Carreira" onerror="this.style.display='none'">
+        <div class="piloto-card-overlay"></div>
+        <div class="piloto-card-name"><span>Ramiro<br>Carreira</span></div>
+        <div class="piloto-card-years">2022</div>
+
+      </div>
       <div class="piloto-card" data-logros="1">
         <img class="piloto-card-photo" src="fotos/pilotos/ramiro_carreira.jpg" alt="Ramiro Carreira" onerror="this.style.display='none'">
         <div class="piloto-card-overlay"></div>
         <div class="piloto-card-name"><span>Ramiro<br>Carreira</span></div>
         <div class="piloto-card-years">2022</div>
         <div class="piloto-stars" data-count="1"><span class="star-icon">★</span></div>
-		  
       </div>
       <div class="piloto-card" data-logros="0">
         <img class="piloto-card-photo" src="fotos/pilotos/renato_longarzo.jpg" alt="Renato Longarzo" onerror="this.style.display='none'">
@@ -1379,6 +1394,7 @@
         <div class="piloto-card-name"><span>Santino<br>Dore</span></div>
         <div class="piloto-card-years">2022 — 2024</div>
         <div class="piloto-stars" data-count="3"><span class="star-icon">★</span><span class="star-icon">★</span><span class="star-icon">★</span></div>
+      
       </div>
       <div class="piloto-card" data-logros="0">
         <img class="piloto-card-photo" src="fotos/pilotos/santino_pesce.jpg" alt="Santino Pesce" onerror="this.style.display='none'">
