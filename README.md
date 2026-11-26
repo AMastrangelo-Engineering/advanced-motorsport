@@ -1,5 +1,7 @@
 tu-repositorio/
 ├── index.html
+├── fuentes/
+│   └── Race_Sport.ttf
 └── fotos/
     ├── pilotos/
     │   ├── valentino_manta.jpg

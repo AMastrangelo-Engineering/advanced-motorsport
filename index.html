@@ -1,4 +1,4 @@
-<!-- v2.20 -->
+<!-- v2.23 -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,8 +7,11 @@
 <title>Advanced Motorsport — Taking You to the First Place</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,700&family=Barlow:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,700&family=Barlow:wght@300;400;500;600&family=Bebas+Neue&family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
 <style>
+  /* ============ FUENTES LOCALES (v2.21) ============ */
+  @font-face { font-family: 'Race Sport'; src: url('fuentes/Race_Sport.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+
   :root {
     --green: #39FF14;
     --green-dim: #22cc08;
@@ -123,30 +126,49 @@
 
   /* ============ HERO ============ */
   #hero { position: relative; width: 100%; height: 100vh; min-height: 600px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-  .hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #0a0a0a 0%, #111 40%, #0d1a0d 100%); z-index: 0; }
-  .hero-grid { position: absolute; inset: 0; z-index: 1; background-image: linear-gradient(rgba(57,255,20,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(57,255,20,0.04) 1px, transparent 1px); background-size: 60px 60px; animation: gridMove 20s linear infinite; }
-  @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 60px 60px; } }
-  .hero-lines { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
-  .hero-lines::before { content: ''; position: absolute; top: 35%; left: -10%; width: 130%; height: 2px; background: linear-gradient(90deg, transparent, rgba(57,255,20,0.5), transparent); animation: speedLine 3s ease-in-out infinite; }
-  .hero-lines::after { content: ''; position: absolute; top: 55%; left: -10%; width: 130%; height: 1px; background: linear-gradient(90deg, transparent, rgba(57,255,20,0.3), transparent); animation: speedLine 3s ease-in-out infinite 0.8s; }
-  @keyframes speedLine { 0% { transform: translateX(-100%); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateX(100%); opacity: 0; } }
-  .hero-diagonal { position: absolute; bottom: 0; right: 0; width: 55%; height: 100%; z-index: 2; background: linear-gradient(135deg, transparent 40%, rgba(57,255,20,0.04) 100%); clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%); }
+  /* Fondo cuadriculado negro / gris oscuro (cuadros de 80px) */
+  .hero-bg { position: absolute; inset: 0; z-index: 0; background-color: #0a0a0a; background-image: conic-gradient(#101010 25%, #0a0a0a 0 50%, #101010 0 75%, #0a0a0a 0); background-size: 160px 160px; }
+  /* Luz tenue que sigue al mouse; solo se aprecia sobre los cuadros grises */
+  .hero-shine {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    --mx: 50%; --my: 45%;
+    opacity: 0; transition: opacity 0.9s ease;
+    background-image: radial-gradient(circle 460px at var(--mx) var(--my), rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.035) 40%, rgba(255,255,255,0) 100%);
+    -webkit-mask-image: conic-gradient(#000 25%, transparent 0 50%, #000 0 75%, transparent 0); mask-image: conic-gradient(#000 25%, transparent 0 50%, #000 0 75%, transparent 0);
+    -webkit-mask-size: 160px 160px; mask-size: 160px 160px;
+  }
+  #hero.mouse-active .hero-shine { opacity: 1; }
   .hero-accent-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: var(--green); z-index: 10; }
-  .hero-content { position: relative; z-index: 5; text-align: center; padding: 0 2rem; animation: heroReveal 1.2s ease forwards; }
-  @keyframes heroReveal { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-  .hero-eyebrow { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.4em; text-transform: uppercase; color: var(--green); margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 12px; }
-  .hero-eyebrow::before, .hero-eyebrow::after { content: ''; display: block; width: 40px; height: 1px; background: var(--green); }
-  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.5rem, 9vw, 8rem); line-height: 0.9; letter-spacing: 0.03em; color: var(--white); margin-bottom: 0.3rem; }
-  .hero-title .green { color: var(--green); }
-  .hero-subtitle-bar { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(1rem, 2.5vw, 1.6rem); font-weight: 300; letter-spacing: 0.25em; text-transform: uppercase; color: var(--light); margin-bottom: 2.5rem; }
-  .hero-tagline { font-family: 'Barlow', sans-serif; font-size: clamp(0.85rem, 1.5vw, 1rem); font-weight: 300; color: var(--gray); letter-spacing: 0.08em; margin-bottom: 3rem; max-width: 560px; margin-left: auto; margin-right: auto; line-height: 1.7; }
-  .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  /* Layout: el logo queda en el centro exacto de la portada; el resto cuelga debajo */
+  .hero-content { position: relative; z-index: 5; width: 100%; height: 100%; box-sizing: border-box; padding: 0 2rem; display: grid; grid-template-rows: 1fr auto 1fr; justify-items: center; text-align: center; }
+  .hero-brand { grid-row: 2; position: relative; width: min(74vw, 840px); }
+  .hero-logo { display: block; width: 100%; height: auto; animation: logoIn 2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both; }
+  @keyframes logoIn { 0% { opacity: 0; transform: scale(1.45); filter: blur(22px); } 55% { opacity: 1; } 100% { opacity: 1; transform: scale(1); filter: blur(0); } }
+  .hero-lower { grid-row: 3; align-self: start; padding-top: 1rem; display: flex; flex-direction: column; align-items: center; }
+  .hero-signature { width: min(74vw, 840px); }
+  /* ADVANCED MOTORSPORT: mismo ancho que el logo, altura al 70% (proporción 10/7) */
+  .hero-wordmark { display: block; width: 100%; height: auto; animation: heroFade 1s ease 1.3s both; }
+  .hero-wordmark .wm-w { fill: var(--white); }
+  .hero-wordmark .wm-g { fill: var(--green); }
+  .hero-eyebrow { display: block; margin-top: 0.8rem; margin-right: -0.4em; text-align: right; font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.4em; text-transform: uppercase; color: var(--green); white-space: nowrap; animation: heroFade 1s ease 1.6s both; }
+  @keyframes heroFade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-subtitle-bar { font-family: 'Montserrat', sans-serif; font-size: clamp(0.8rem, 1.7vw, 1.15rem); font-weight: 500; letter-spacing: 0.4em; padding-left: 0.4em; text-transform: uppercase; color: var(--light); margin-top: 2.2rem; margin-bottom: 2.2rem; animation: heroFade 1s ease 1.9s both; }
+  /* Botones del hero: Montserrat verde sobre gris oscuro + text roll con palabra alternativa */
+  .hero-btn { font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--green); background: #202020; padding: 15px 34px; text-decoration: none; transition: background 0.25s; clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%); display: inline-flex; align-items: center; justify-content: center; }
+  .hero-btn:hover, .hero-btn:focus-visible { background: #2a2a2a; }
+  .rb-wrap { display: inline-grid; }
+  .rb-word { grid-area: 1 / 1; display: flex; justify-content: center; white-space: nowrap; }
+  .rb-cell { display: inline-flex; overflow: hidden; }
+  .rb-char { display: inline-block; transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1); }
+  .rb-in .rb-char { transform: translateX(-100%); color: var(--white); }
+  .hero-btn:hover .rb-out .rb-char, .hero-btn:focus-visible .rb-out .rb-char { transform: translateX(100%); }
+  .hero-btn:hover .rb-in .rb-char, .hero-btn:focus-visible .rb-in .rb-char { transform: translateX(0); }
+  .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; animation: heroFade 1s ease 2.2s both; }
   .btn-primary { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.82rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--black); background: var(--green); padding: 14px 32px; text-decoration: none; border: 2px solid var(--green); transition: all 0.25s; clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%); }
   .btn-primary:hover { background: transparent; color: var(--green); }
   .btn-secondary { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.82rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white); background: transparent; padding: 14px 32px; text-decoration: none; border: 1px solid rgba(255,255,255,0.3); transition: all 0.25s; clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%); }
   .btn-secondary:hover { border-color: var(--green); color: var(--green); }
   .scroll-indicator { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 6px; animation: bounce 2s ease infinite; }
-  .scroll-indicator span { font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gray); }
   .scroll-arrow { width: 16px; height: 16px; border-right: 1px solid var(--green); border-bottom: 1px solid var(--green); transform: rotate(45deg); }
   @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
 
@@ -726,8 +748,12 @@
   }
 
   @media (max-width: 480px) {
-    .hero-title { font-size: 3rem; }
     .pilotos-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-eyebrow { letter-spacing: 0.22em; font-size: 0.62rem; margin-right: -0.22em; margin-top: 0.6rem; }
+    .hero-subtitle-bar { letter-spacing: 0.3em; padding-left: 0.3em; margin-top: 1.8rem; margin-bottom: 1.8rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-logo, .hero-wordmark, .hero-eyebrow, .hero-subtitle-bar, .hero-buttons { animation: none; }
   }
 </style>
 </head>
@@ -753,22 +779,25 @@
 
 <section id="hero">
   <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-  <div class="hero-lines"></div>
-  <div class="hero-diagonal"></div>
+  <div class="hero-shine"></div>
   <div class="hero-accent-bar"></div>
   <div class="hero-content">
-    <div class="hero-eyebrow">By Ayrton Mastrangelo</div>
-    <div class="hero-title">ADVANCED<br><span class="green">MOTORSPORT</span></div>
-    <div class="hero-subtitle-bar">Ingeniería &nbsp;·&nbsp; Media &nbsp;·&nbsp; Performance &nbsp;·&nbsp; Coaching</div>
-    <p class="hero-tagline">En el motorsport de alta competencia, la diferencia entre ganar y participar se mide en milésimas de segundo y decisiones basadas en datos.</p>
-    <div class="hero-buttons">
-      <a href="#ingenieria" class="btn-primary">AM Engineering</a>
-      <a href="#media" class="btn-secondary">AM Media</a>
+    <div class="hero-brand">
+      <img class="hero-logo" src="fotos/logos/am_logo.png" alt="Advanced Motorsport">
+    </div>
+    <div class="hero-lower">
+      <div class="hero-signature">
+        <svg class="hero-wordmark" viewBox="0 0 17468 490" role="img" aria-label="Advanced Motorsport" xmlns="http://www.w3.org/2000/svg"><path class="wm-w" d="M0 490Q10 468.3 27 433.6Q44 399 65 357.3Q86 315.7 108.5 270.2Q131 224.7 152 182.3Q173 140 191 103.6Q209 67.2 220 43.4L159 14Q152 10.5 154.5 5.2Q157 0 165 0H1044Q1036 16.1 1019 51.1Q1002 86.1 980 130.9Q958 175.7 934 226.1Q910 276.5 887.5 323.4Q865 370.3 846.5 408.8Q828 447.3 818 469Q808 490 776 490H569L631 371.7H294L246 469Q236 490 204 490ZM343 272.3H680L747 135.1Q756 118.3 726 118.3H367Q359 118.3 356.5 123.5Q354 128.8 360 132.3L400 157.5ZM1002 448.7 1139 172.9H1373Q1369 180.6 1362.5 193.2Q1356 205.8 1348.5 221.2Q1341 236.6 1333 253.7Q1325 270.9 1317 287.7L1275 371.7H1555Q1571 371.7 1574 362.6L1690 127.4Q1696 118.3 1680 118.3H1165Q1170 108.5 1174.5 100.1Q1179 91.7 1184 84Q1191 70 1197 58.1Q1203 46.2 1205 42.7L1140 14.7Q1132 11.2 1135 5.6Q1138 0 1146 0H1988L1802 378Q1790 401.1 1769 421.4Q1748 441.7 1719 456.7Q1690 471.8 1653.5 480.9Q1617 490 1574 490H1044Q1020 490 1007 477Q994 464.1 1002 448.7ZM2025 0H2316L2375 228.9L2364 324.1Q2363 329.7 2371 331.8Q2379 333.9 2384 329.7Q2443 280.7 2488 243.2Q2533 205.8 2575 170.4Q2617 135.1 2662.5 97.6Q2708 60.2 2769 10.5Q2784 0 2803 0H3035Q3019 12.6 2988.5 37.4Q2958 62.3 2917.5 94.5Q2877 126.7 2830.5 164.8Q2784 203 2736 241.8Q2688 280.7 2641.5 318.1Q2595 355.6 2555.5 387.8Q2516 420 2486 443.8Q2456 467.6 2441 479.5Q2429 490 2407 490H2196Q2191 470.4 2181.5 432.6Q2172 394.8 2161 348.9Q2150 303.1 2137.5 253.7Q2125 204.4 2114.5 161.3Q2104 118.3 2095.5 86.4Q2087 54.6 2084 43.4Q2077 39.9 2076 39.5Q2075 39.2 2071.5 37.4Q2068 35.7 2057.5 31.1Q2047 26.6 2020 14Q2013 10.5 2015 5.6Q2017 0.7 2025 0ZM3020 490Q3030 468.3 3047 433.6Q3064 399 3085 357.3Q3106 315.7 3128.5 270.2Q3151 224.7 3172 182.3Q3193 140 3211 103.6Q3229 67.2 3240 43.4L3179 14Q3172 10.5 3174.5 5.2Q3177 0 3185 0H4064Q4056 16.1 4039 51.1Q4022 86.1 4000 130.9Q3978 175.7 3954 226.1Q3930 276.5 3907.5 323.4Q3885 370.3 3866.5 408.8Q3848 447.3 3838 469Q3828 490 3796 490H3589L3651 371.7H3314L3266 469Q3256 490 3224 490ZM3363 272.3H3700L3767 135.1Q3776 118.3 3746 118.3H3387Q3379 118.3 3376.5 123.5Q3374 128.8 3380 132.3L3420 157.5ZM4014 490Q4022 473.2 4037.5 441.7Q4053 410.2 4073 370.3Q4093 330.4 4115.5 284.9Q4138 239.4 4160.5 194.9Q4183 150.5 4202.5 110.9Q4222 71.4 4236 42.7L4175 14Q4167 10.5 4170 5.2Q4173 0 4181 0H4492L4711 317.1L4730 214.2L4836 0H5071L4839 469Q4829 490 4797 490H4606Q4598 478.1 4585 459.5Q4572 441 4555.5 418.6Q4539 396.2 4520.5 371Q4502 345.8 4484 321.3Q4463 291.9 4440.5 262.1Q4418 232.4 4394 198.8Q4393 200.2 4382 221.9Q4371 243.6 4355.5 274.8Q4340 305.9 4322.5 341.2Q4305 376.6 4290.5 406.3Q4276 436.1 4267 454.3Q4258 472.5 4260 469Q4250 490 4218 490ZM5029 399.7Q5043 371.7 5060 337.7Q5077 303.8 5095.5 267.7Q5114 231.7 5132 196Q5150 160.3 5165.5 129.8Q5181 99.4 5193 76.3Q5205 53.2 5210 42.7L5147 14Q5140 10.5 5142.5 5.2Q5145 0 5153 0H6037L5991 97.3Q5986 107.1 5974 112.7Q5962 118.3 5948 118.3H5326Q5318 118.3 5315.5 123.5Q5313 128.8 5319 132.3L5378 169.4L5283 362.6Q5280 370.3 5291 371.7H5859L5812 469Q5801 490 5770 490H5120Q5095 490 5074.5 481.9Q5054 473.9 5041.5 461.3Q5029 448.7 5025 432.6Q5021 416.5 5029 399.7ZM5985 401.1 6160 42.7Q6158 39.9 6139.5 31.1Q6121 22.4 6102 14Q6095 10.5 6097.5 5.2Q6100 0 6108 0H6902L6854 97.3Q6843 118.3 6812 118.3H6289Q6281 118.3 6278.5 123.5Q6276 128.8 6282 132.3L6336 166.6L6321 195.3H6663L6624 273.7Q6613 294.7 6582 294.7H6225Q6217 294.7 6214.5 299.6Q6212 304.5 6217 308L6254 331.8L6234 371.7H6719L6670 469Q6660 490 6628 490H6075Q6051 490 6030.5 482.3Q6010 474.6 5997.5 462Q5985 449.4 5981 433.3Q5977 417.2 5985 401.1ZM6850 448.7 6987 172.9H7221Q7217 180.6 7210.5 193.2Q7204 205.8 7196.5 221.2Q7189 236.6 7181 253.7Q7173 270.9 7165 287.7L7123 371.7H7403Q7419 371.7 7422 362.6L7538 127.4Q7544 118.3 7528 118.3H7013Q7018 108.5 7022.5 100.1Q7027 91.7 7032 84Q7039 70 7045 58.1Q7051 46.2 7053 42.7L6988 14.7Q6980 11.2 6983 5.6Q6986 0 6994 0H7836L7650 378Q7638 401.1 7617 421.4Q7596 441.7 7567 456.7Q7538 471.8 7501.5 480.9Q7465 490 7422 490H6892Q6868 490 6855 477Q6842 464.1 6850 448.7Z"/><path class="wm-g" d="M8395 42.7 8334 14Q8326 10.5 8329 5.2Q8332 0 8340 0H8615L8657 97.3Q8666 116.9 8675 136.8Q8684 156.8 8692 175Q8700 193.2 8706.5 208.2Q8713 223.3 8717 233.1Q8717 237.3 8716 247.8Q8715 258.3 8714.5 270.2Q8714 282.1 8713 292.6Q8712 303.1 8712 307.3Q8723 298.9 8746.5 281.4Q8770 263.9 8800 241.5Q8830 219.1 8865 193.2Q8900 167.3 8935 141.4Q8977 111.3 9020.5 78.4Q9064 45.5 9112 9.8Q9124 0 9144 0H9348Q9346 4.9 9335.5 26.6Q9325 48.3 9309 80.8Q9293 113.4 9273 153.6Q9253 193.9 9232.5 235.5Q9212 277.2 9192 317.1Q9172 357 9155.5 389.5Q9139 422.1 9128.5 443.4Q9118 464.8 9116 469Q9106 490 9074 490H8871L8967 294.7L8771 428.4Q8758 436.8 8740 436.8H8573L8505 295.4L8419 469Q8409 490 8377 490H8172Q8179 475.3 8194.5 444.5Q8210 413.7 8230 373.1Q8250 332.5 8273 286.3Q8296 240.1 8318.5 195.3Q8341 150.5 8361 110.6Q8381 70.7 8395 42.7ZM9331 378 9462 111.3Q9473 88.2 9494 68.2Q9515 48.3 9544.5 32.9Q9574 17.5 9611 8.8Q9648 0 9690 0H10133Q10172 0 10203.5 8Q10235 16.1 10254.5 30.8Q10274 45.5 10280 65.8Q10286 86.1 10274 111.3L10142 378Q10131 400.4 10110.5 420.7Q10090 441 10060.5 456.4Q10031 471.8 9994 480.9Q9957 490 9914 490H9472Q9433 490 9401.5 481.9Q9370 473.9 9350 459.2Q9330 444.5 9324 423.8Q9318 403.2 9331 378ZM9584 371.7H9895Q9911 371.7 9914 362.6L10031 127.4Q10035 118.3 10020 118.3H9613Q9605 118.3 9602 123.5Q9599 128.8 9605 132.3L9667 171.5L9573 362.6Q9569 371.7 9584 371.7ZM10274 0H11080Q11076 8.4 11069.5 21Q11063 33.6 11056 47.2Q11049 60.9 11042.5 73.8Q11036 86.8 11031 97.3Q11021 118.3 10989 118.3H10739Q10731 118.3 10728.5 123.5Q10726 128.8 10732 132.3L10793 171.5L10646 469Q10636 490 10604 490H10400L10585 118.3H10293Q10294 116.2 10300.5 105.3Q10307 94.5 10314.5 81.5Q10322 68.6 10329 57Q10336 45.5 10337 42.7L10269 14.7Q10261 11.2 10263.5 5.6Q10266 0 10274 0ZM11028 378 11159 111.3Q11170 88.2 11191 68.2Q11212 48.3 11241.5 32.9Q11271 17.5 11308 8.8Q11345 0 11387 0H11830Q11869 0 11900.5 8Q11932 16.1 11951.5 30.8Q11971 45.5 11977 65.8Q11983 86.1 11971 111.3L11839 378Q11828 400.4 11807.5 420.7Q11787 441 11757.5 456.4Q11728 471.8 11691 480.9Q11654 490 11611 490H11169Q11130 490 11098.5 481.9Q11067 473.9 11047 459.2Q11027 444.5 11021 423.8Q11015 403.2 11028 378ZM11281 371.7H11592Q11608 371.7 11611 362.6L11728 127.4Q11732 118.3 11717 118.3H11310Q11302 118.3 11299 123.5Q11296 128.8 11302 132.3L11364 171.5L11270 362.6Q11266 371.7 11281 371.7ZM11933 490Q11945 464.8 11963 428.7Q11981 392.7 12001.5 351Q12022 309.4 12044.5 265.3Q12067 221.2 12087.5 179.9Q12108 138.6 12126 102.9Q12144 67.2 12156 42.7L12096 14Q12089 10.5 12091.5 5.2Q12094 0 12103 0H12778Q12817 0 12848.5 8Q12880 16.1 12899.5 30.8Q12919 45.5 12925 66.1Q12931 86.8 12919 111.3Q12899 152.6 12886 180.6Q12873 208.6 12859.5 228.9Q12846 249.2 12828.5 264.6Q12811 280 12781 296.1Q12755 310.1 12727.5 316.8Q12700 323.4 12676 325.8Q12652 328.3 12634.5 328.6Q12617 329 12611 329.7L12713 442.4Q12720 450.1 12720 458.5Q12720 466.9 12714.5 473.9Q12709 480.9 12699 485.4Q12689 490 12676 490H12487L12364 329.7H12251L12182 469Q12172 490 12140 490ZM12273 132.3Q12282 137.9 12292.5 143.8Q12303 149.8 12311 155.4Q12316 158.9 12321 161.7Q12326 164.5 12331 168L12307 216.3H12617Q12633 216.3 12637 207.2L12640 200.9Q12642 198.1 12643.5 194.2Q12645 190.4 12647 185.5Q12652 176.4 12656.5 166.6Q12661 156.8 12666 147.7Q12668 142.1 12671 137.2Q12674 132.3 12676 127.4Q12682 118.3 12666 118.3H12281Q12273 118.3 12270.5 123.5Q12268 128.8 12273 132.3ZM12930 390.6Q12935 381.5 12946 376.2Q12957 371 12971 371H13458Q13474 371.7 13478 362.6L13505 308Q13510 299.6 13494 299.6H13154Q13115 299.6 13083 291.5Q13051 283.5 13031 268.8Q13011 254.1 13005 233.4Q12999 212.8 13012 187.6L13049 111.3Q13060 88.2 13081.5 68.2Q13103 48.3 13132.5 32.9Q13162 17.5 13199 8.8Q13236 0 13278 0H13854Q13841 26.6 13831 48.3Q13821 70 13809 96.6Q13799 118.3 13767 118.3H13214Q13206 118.3 13203.5 123.5Q13201 128.8 13207 132.3L13258 164.5L13250 182Q13246 190.4 13261 190.4H13602Q13641 190.4 13672.5 198.4Q13704 206.5 13724 221.2Q13744 235.9 13750 256.5Q13756 277.2 13743 302.4L13706 378.7Q13694 401.1 13674 421.4Q13654 441.7 13626 456.7Q13598 471.8 13562.5 480.9Q13527 490 13484 490H12871ZM13804 490Q13814 470.4 13830 437.8Q13846 405.3 13866 365.7Q13886 326.2 13907.5 281.7Q13929 237.3 13950 194.2Q13971 151.2 13990 112Q14009 72.8 14023 42.7L13964 14Q13957 10.5 13959.5 5.2Q13962 0 13970 0H14636Q14679 0 14710.5 9.4Q14742 18.9 14760.5 34.3Q14779 49.7 14783.5 70Q14788 90.3 14777 111.3L14714 238Q14703 260.4 14682 280.7Q14661 301 14631.5 316.4Q14602 331.8 14565.5 340.9Q14529 350 14487 350H14107L14049 469Q14039 490 14007 490ZM14141 132.3 14198 168 14164 236.6H14465Q14480 236.6 14484 228.2L14534 127.4Q14534 126.7 14534.5 126Q14535 125.3 14534 123.9Q14532 118.3 14523 118.3H14149Q14141 118.3 14138.5 123.5Q14136 128.8 14141 132.3ZM14771 378 14902 111.3Q14913 88.2 14934 68.2Q14955 48.3 14984.5 32.9Q15014 17.5 15051 8.8Q15088 0 15130 0H15573Q15612 0 15643.5 8Q15675 16.1 15694.5 30.8Q15714 45.5 15720 65.8Q15726 86.1 15714 111.3L15582 378Q15571 400.4 15550.5 420.7Q15530 441 15500.5 456.4Q15471 471.8 15434 480.9Q15397 490 15354 490H14912Q14873 490 14841.5 481.9Q14810 473.9 14790 459.2Q14770 444.5 14764 423.8Q14758 403.2 14771 378ZM15024 371.7H15335Q15351 371.7 15354 362.6L15471 127.4Q15475 118.3 15460 118.3H15053Q15045 118.3 15042 123.5Q15039 128.8 15045 132.3L15107 171.5L15013 362.6Q15009 371.7 15024 371.7ZM15676 490Q15688 464.8 15706 428.7Q15724 392.7 15744.5 351Q15765 309.4 15787.5 265.3Q15810 221.2 15830.5 179.9Q15851 138.6 15869 102.9Q15887 67.2 15899 42.7L15839 14Q15832 10.5 15834.5 5.2Q15837 0 15846 0H16521Q16560 0 16591.5 8Q16623 16.1 16642.5 30.8Q16662 45.5 16668 66.1Q16674 86.8 16662 111.3Q16642 152.6 16629 180.6Q16616 208.6 16602.5 228.9Q16589 249.2 16571.5 264.6Q16554 280 16524 296.1Q16498 310.1 16470.5 316.8Q16443 323.4 16419 325.8Q16395 328.3 16377.5 328.6Q16360 329 16354 329.7L16456 442.4Q16463 450.1 16463 458.5Q16463 466.9 16457.5 473.9Q16452 480.9 16442 485.4Q16432 490 16419 490H16230L16107 329.7H15994L15925 469Q15915 490 15883 490ZM16016 132.3Q16025 137.9 16035.5 143.8Q16046 149.8 16054 155.4Q16059 158.9 16064 161.7Q16069 164.5 16074 168L16050 216.3H16360Q16376 216.3 16380 207.2L16383 200.9Q16385 198.1 16386.5 194.2Q16388 190.4 16390 185.5Q16395 176.4 16399.5 166.6Q16404 156.8 16409 147.7Q16411 142.1 16414 137.2Q16417 132.3 16419 127.4Q16425 118.3 16409 118.3H16024Q16016 118.3 16013.5 123.5Q16011 128.8 16016 132.3ZM16662 0H17468Q17464 8.4 17457.5 21Q17451 33.6 17444 47.2Q17437 60.9 17430.5 73.8Q17424 86.8 17419 97.3Q17409 118.3 17377 118.3H17127Q17119 118.3 17116.5 123.5Q17114 128.8 17120 132.3L17181 171.5L17034 469Q17024 490 16992 490H16788L16973 118.3H16681Q16682 116.2 16688.5 105.3Q16695 94.5 16702.5 81.5Q16710 68.6 16717 57Q16724 45.5 16725 42.7L16657 14.7Q16649 11.2 16651.5 5.6Q16654 0 16662 0Z"/></svg>
+        <div class="hero-eyebrow">By Ayrton Mastrangelo</div>
+      </div>
+      <div class="hero-subtitle-bar">Academia de Pilotos</div>
+      <div class="hero-buttons">
+        <a href="#ingenieria" class="hero-btn" data-hover="On Track">Engineering</a>
+        <a href="#media" class="hero-btn" data-hover="Off Track">Media</a>
+      </div>
     </div>
   </div>
   <div class="scroll-indicator">
-    <span>Scroll</span>
     <div class="scroll-arrow"></div>
   </div>
 </section>
@@ -1077,6 +1106,13 @@
       </div>
       
       <div class="piloto-card" data-logros="0">
+        <img class="piloto-card-photo" src="fotos/pilotos/bastian_soetberg.jpg" alt="Bastian Soetberg" onerror="this.style.display='none'">
+        <div class="piloto-card-overlay"></div>
+        <div class="piloto-card-name"><span>Bastian<br>Soetberg</span></div>
+        <div class="piloto-card-years">2026</div>
+      </div>
+
+      <div class="piloto-card" data-logros="0">
         <img class="piloto-card-photo" src="fotos/pilotos/bruno_medeot.jpg" alt="Bruno Medeot" onerror="this.style.display='none'">
         <div class="piloto-card-overlay"></div>
         <div class="piloto-card-name"><span>Bruno<br>Medeot</span></div>
@@ -1095,6 +1131,13 @@
         <div class="piloto-card-overlay"></div>
         <div class="piloto-card-name"><span>Damian<br>Galgani</span></div>
         <div class="piloto-card-years">2024 — 2026</div>
+      </div>
+
+      <div class="piloto-card" data-logros="0">
+        <img class="piloto-card-photo" src="fotos/pilotos/elias_bustos.jpg" alt="Elias Bustos" onerror="this.style.display='none'">
+        <div class="piloto-card-overlay"></div>
+        <div class="piloto-card-name"><span>Elias<br>Bustos</span></div>
+        <div class="piloto-card-years">2026</div>
       </div>
 
       <div class="piloto-card" data-logros="0">
@@ -1137,7 +1180,14 @@
         <div class="piloto-card-overlay"></div>
         <div class="piloto-card-name"><span>Juan<br>Urfini</span></div>
         <div class="piloto-card-years">2026</div>
-      </div>      
+      </div>
+
+      <div class="piloto-card" data-logros="0">
+        <img class="piloto-card-photo" src="fotos/pilotos/juan_martin_lage.jpg" alt="Juan Martin Lage" onerror="this.style.display='none'">
+        <div class="piloto-card-overlay"></div>
+        <div class="piloto-card-name"><span>Juan Martin<br>Lage</span></div>
+        <div class="piloto-card-years">2026</div>
+      </div>
 
       <div class="piloto-card" data-logros="0">
         <img class="piloto-card-photo" src="fotos/pilotos/lautaro_garcia.jpg" alt="Lautaro Garcia" onerror="this.style.display='none'">
@@ -1166,13 +1216,6 @@
         <div class="piloto-card-name"><span>Nicolas<br>Forconi</span></div>
         <div class="piloto-card-years">2025 — 2026</div>
       </div>
-
-      <div class="piloto-card" data-logros="0">
-        <img class="piloto-card-photo" src="fotos/pilotos/noha_vasicek.jpg" alt="Noha Vasicek" onerror="this.style.display='none'">
-        <div class="piloto-card-overlay"></div>
-        <div class="piloto-card-name"><span>Noha<br>Vasicek</span></div>
-        <div class="piloto-card-years">2026</div>
-      </div>
       
       <div class="piloto-card" data-logros="0">
         <img class="piloto-card-photo" src="fotos/pilotos/oreste_durante.jpg" alt="Oreste Durante" onerror="this.style.display='none'">
@@ -1185,6 +1228,13 @@
         <img class="piloto-card-photo" src="fotos/pilotos/santiago_jara.jpg" alt="Santiago Jara" onerror="this.style.display='none'">
         <div class="piloto-card-overlay"></div>
         <div class="piloto-card-name"><span>Santiago<br>Jara</span></div>
+        <div class="piloto-card-years">2025 — 2026</div>
+      </div>
+
+      <div class="piloto-card" data-logros="0">
+        <img class="piloto-card-photo" src="fotos/pilotos/simon_cortes_falcon.jpg" alt="Simon Cortes Falcon" onerror="this.style.display='none'">
+        <div class="piloto-card-overlay"></div>
+        <div class="piloto-card-name"><span>Simon<br>Cortes Falcon</span></div>
         <div class="piloto-card-years">2025 — 2026</div>
       </div>
       
@@ -1439,6 +1489,13 @@
         <div class="piloto-card-overlay"></div>
         <div class="piloto-card-name"><span>Nicolas<br>Rolando</span></div>
         <div class="piloto-card-years">2022</div>
+      </div>
+
+      <div class="piloto-card" data-logros="0">
+        <img class="piloto-card-photo" src="fotos/pilotos/noha_vasicek.jpg" alt="Noha Vasicek" onerror="this.style.display='none'">
+        <div class="piloto-card-overlay"></div>
+        <div class="piloto-card-name"><span>Noha<br>Vasicek</span></div>
+        <div class="piloto-card-years">2026</div>
       </div>
       
       <div class="piloto-card" data-logros="0">
@@ -1759,6 +1816,31 @@
     nav.classList.toggle('scrolled', window.scrollY > 60);
   });
 
+  // --- Hero: luz tenue que sigue al mouse (solo con mouse; en táctiles queda estático) ---
+  (function () {
+    const hero = document.getElementById('hero');
+    const shine = hero && hero.querySelector('.hero-shine');
+    if (!shine) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let tx = 0, ty = 0, cx = 0, cy = 0, running = false;
+    function frame() {
+      cx += (tx - cx) * 0.08;
+      cy += (ty - cy) * 0.08;
+      shine.style.setProperty('--mx', cx.toFixed(1) + 'px');
+      shine.style.setProperty('--my', cy.toFixed(1) + 'px');
+      if (Math.abs(tx - cx) > 0.3 || Math.abs(ty - cy) > 0.3) requestAnimationFrame(frame);
+      else running = false;
+    }
+    hero.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      const r = hero.getBoundingClientRect();
+      tx = e.clientX - r.left; ty = e.clientY - r.top;
+      if (!hero.classList.contains('mouse-active')) { cx = tx; cy = ty; hero.classList.add('mouse-active'); }
+      if (!running) { running = true; requestAnimationFrame(frame); }
+    });
+    hero.addEventListener('pointerleave', () => hero.classList.remove('mouse-active'));
+  })();
+
   // --- Menú hamburguesa (mobile) ---
   function toggleMenu() {
     document.getElementById('navLinks').classList.toggle('open');
@@ -1834,6 +1916,29 @@
     });
 
     link.appendChild(wrapper);
+  });
+
+  /* Text roll en botones del hero (palabra alternativa al hover) */
+  document.querySelectorAll('.hero-btn[data-hover]').forEach(btn => {
+    const from = btn.textContent.trim(), to = btn.dataset.hover;
+    btn.setAttribute('aria-label', from);
+    btn.textContent = '';
+    const build = (word, cls) => {
+      const w = document.createElement('span');
+      w.className = 'rb-word ' + cls;
+      w.setAttribute('aria-hidden', 'true');
+      [...word].forEach((ch, i) => {
+        const cell = document.createElement('span'); cell.className = 'rb-cell';
+        const c = document.createElement('span'); c.className = 'rb-char';
+        c.innerHTML = ch === ' ' ? '&nbsp;' : ch;
+        c.style.transitionDelay = (i * 0.035) + 's';
+        cell.appendChild(c); w.appendChild(cell);
+      });
+      return w;
+    };
+    const wrap = document.createElement('span'); wrap.className = 'rb-wrap';
+    wrap.append(build(from, 'rb-out'), build(to, 'rb-in'));
+    btn.appendChild(wrap);
   });
 
   /* ====================================================
