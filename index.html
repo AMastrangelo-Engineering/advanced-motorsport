@@ -1,4 +1,4 @@
-<!-- v2.23 -->
+<!-- v2.26 -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,7 +7,7 @@
 <title>Advanced Motorsport — Taking You to the First Place</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,700&family=Barlow:wght@300;400;500;600&family=Bebas+Neue&family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,700&family=Barlow:wght@300;400;500;600&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   /* ============ FUENTES LOCALES (v2.21) ============ */
   @font-face { font-family: 'Race Sport'; src: url('fuentes/Race_Sport.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
@@ -23,6 +23,9 @@
     --gray: #888;
     --light: #e8e8e8;
     --white: #ffffff;
+    --r: 18px;      /* radio de esquinas: marcos y tarjetas */
+    --r-sm: 10px;   /* radio de esquinas: botones e inputs */
+    --fade-h: 511px; /* alto del degradé del cuadrille */
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -44,7 +47,10 @@
   ::-webkit-scrollbar-thumb:hover { background-color: #a0a0a0; }
 
   body {
-    background: var(--black);
+    /* Cuadrille global (cuadros de 80px). Las secciones con fondo negro liso lo tapan. */
+    background-color: var(--black);
+    background-image: conic-gradient(#101010 25%, #0a0a0a 0 50%, #101010 0 75%, #0a0a0a 0);
+    background-size: 160px 160px;
     color: var(--white);
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
@@ -126,19 +132,22 @@
 
   /* ============ HERO ============ */
   #hero { position: relative; width: 100%; height: 100vh; min-height: 600px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-  /* Fondo cuadriculado negro / gris oscuro (cuadros de 80px) */
-  .hero-bg { position: absolute; inset: 0; z-index: 0; background-color: #0a0a0a; background-image: conic-gradient(#101010 25%, #0a0a0a 0 50%, #101010 0 75%, #0a0a0a 0); background-size: 160px 160px; }
-  /* Luz tenue que sigue al mouse; solo se aprecia sobre los cuadros grises */
-  .hero-shine {
-    position: absolute; inset: 0; z-index: 1; pointer-events: none;
-    --mx: 50%; --my: 45%;
+  /* Luz tenue que sigue al mouse sobre el cuadrille (capa fija detrás del contenido).
+     Solo se ve sobre los cuadros grises que no están tapados por secciones negras. */
+  .grid-light {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    --mx: 50vw; --my: 40vh; --sy: 0px;
     opacity: 0; transition: opacity 0.9s ease;
     background-image: radial-gradient(circle 460px at var(--mx) var(--my), rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.035) 40%, rgba(255,255,255,0) 100%);
     -webkit-mask-image: conic-gradient(#000 25%, transparent 0 50%, #000 0 75%, transparent 0); mask-image: conic-gradient(#000 25%, transparent 0 50%, #000 0 75%, transparent 0);
     -webkit-mask-size: 160px 160px; mask-size: 160px 160px;
+    -webkit-mask-position: 0 calc(var(--sy) * -1); mask-position: 0 calc(var(--sy) * -1);
   }
-  #hero.mouse-active .hero-shine { opacity: 1; }
-  .hero-accent-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: var(--green); z-index: 10; }
+  .grid-light.on { opacity: 1; }
+  /* Degradé del cuadrille: líneas negras que tapan los cuadros hasta cubrirlos del todo (o al revés) */
+  .grid-fade { position: absolute; left: 0; top: 0; width: 100%; height: var(--fade-h); display: block; pointer-events: none; fill: var(--black); }
+  .grid-fade.in { transform: scaleY(-1); }
+
   /* Layout: el logo queda en el centro exacto de la portada; el resto cuelga debajo */
   .hero-content { position: relative; z-index: 5; width: 100%; height: 100%; box-sizing: border-box; padding: 0 2rem; display: grid; grid-template-rows: 1fr auto 1fr; justify-items: center; text-align: center; }
   .hero-brand { grid-row: 2; position: relative; width: min(74vw, 840px); }
@@ -177,13 +186,13 @@
   .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; position: relative; }
   .section-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.4em; text-transform: uppercase; color: var(--green); margin-bottom: 1rem; display: flex; align-items: center; gap: 12px; }
   .section-label::before { content: ''; display: block; width: 3px; height: 16px; background: var(--green); flex-shrink: 0; }
-  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 5vw, 4rem); letter-spacing: 0.04em; line-height: 1; margin-bottom: 1.5rem; }
+  .section-title { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: clamp(1.5rem, 3vw, 2.5rem); letter-spacing: 0.01em; line-height: 1.1; margin-bottom: 1.5rem; }
   .section-title .green { color: var(--green); }
   .green-line { width: 100%; height: 2px; background: linear-gradient(90deg, var(--green), rgba(57,255,20,0.1)); margin-bottom: 3rem; }
   .services-heading { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gray); margin-bottom: 1.5rem; }
 
   /* ============ HISTORIA ============ */
-  #historia { background: var(--dark); }
+  #historia { background: transparent; }
   .historia-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
   .historia-text p { color: var(--light); line-height: 1.8; margin-bottom: 1.2rem; font-size: 1rem; font-weight: 300; }
   .historia-text p strong { color: var(--white); font-weight: 600; }
@@ -195,187 +204,56 @@
   .h-stat::before { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--green); transition: width 0.4s ease; }
   .h-stat:hover { background: var(--dark3); }
   .h-stat:hover::before { width: 100%; }
-  .h-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; color: var(--green); line-height: 1; margin-bottom: 0.3rem; }
+  .h-stat-num { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 2.6rem; color: var(--green); line-height: 1; margin-bottom: 0.3rem; }
   .h-stat-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); }
 
   /* ============ NUEVA TRAYECTORIA VITRINA CARRUSEL ============ */
-  #trayectoria-vitrina { 
-    position: relative; 
-    width: 100%; 
-    background: var(--black); 
-    padding-top: 80px;
-    padding-bottom: 40px;
-  }
+  #trayectoria-vitrina { position: relative; background: transparent; padding: 100px 0 90px; }
+  #trayectoria-vitrina .green-line { margin-bottom: 2rem; }
 
-  .trayectoria-header {
-    position: relative;
-    z-index: 10;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-    padding: 0 2rem;
-  }
-
-  /* Contenedor de estrellas planas arriba (DISTRIBUCIÓN FULL WIDTH) */
-  #t-stars-nav {
-    max-width: 1200px;
-    margin: 1rem auto 2rem;
-    padding: 0 2rem;
-    display: flex;
-    justify-content: space-between; /* Distribución pareja abarcando el 100% de la línea de tiempo */
-    align-items: center;
-    gap: 4px;
-    flex-wrap: nowrap;
-    z-index: 10;
-    position: relative;
-  }
-  .flat-star {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    fill: none;
-    stroke: var(--gray);
-    stroke-width: 1.5;
-    transition: all 0.3s ease;
-  }
-  .flat-star:hover {
-    stroke: #FFD700;
-    transform: scale(1.15);
-  }
-  .flat-star.active {
-    fill: #FFD700;
-    stroke: #FFD700;
-    transform: scale(1.2);
-    filter: drop-shadow(0 0 8px rgba(255,215,0,0.6));
-  }
-
-  /* Contenedor del Carrusel Full Width */
-  #t-carousel-wrapper {
-    position: relative;
-    width: 100%;
-    height: 60vh;
-    min-height: 450px;
-    max-height: 700px;
-    background: var(--dark2);
-    overflow: hidden;
-  }
-
-  .t-slide {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.8s ease-in-out;
-    pointer-events: none;
-  }
-  .t-slide.active {
-    opacity: 1;
-    z-index: 2;
-    pointer-events: auto;
-  }
-  
-  .t-slide-bg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Animaciones de Paneo de Imagen */
-  @keyframes panDesktop {
-    0% { object-position: center 0%; }
-    100% { object-position: center 100%; }
-  }
-  @keyframes panMobile {
-    0% { object-position: 0% center; }
-    100% { object-position: 100% center; }
-  }
-
-  .t-slide.active .t-slide-bg {
-    animation: panDesktop var(--pan-duration, 7000ms) ease-in-out forwards;
-  }
-  
-  .t-slide-no-img {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--dark3);
-    color: rgba(57,255,20,0.3);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 1rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-
-  /* Tarjeta de información flotante */
-  .t-slide-info-box {
-    position: absolute;
-    bottom: 40px;
-    left: max(2rem, calc((100vw - 1200px) / 2 + 2rem));
-    background: rgba(10, 10, 10, 0.85);
-    backdrop-filter: blur(8px);
-    border-left: 3px solid var(--green);
-    padding: 1.5rem 2rem;
-    max-width: 90%;
-    width: 500px;
-    transform: translateY(20px);
-    opacity: 0;
-    transition: all 0.5s ease 0.3s;
-  }
-  .t-slide.active .t-slide-info-box {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  .t-slide-fecha {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.9rem;
-    letter-spacing: 0.2em;
-    color: var(--green);
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-  }
-  .t-slide-piloto {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.5rem;
-    color: var(--white);
-    line-height: 1;
-    margin-bottom: 0.3rem;
-  }
-  .t-slide-cat {
-    font-family: 'Barlow', sans-serif;
-    font-size: 1rem;
-    color: var(--light);
-    font-weight: 300;
-  }
-  .t-slide-desc {
-    font-family: 'Barlow', sans-serif;
-    font-size: 0.85rem;
-    color: var(--gray);
-    font-weight: 300;
-    font-style: italic;
-    margin-top: 0.8rem;
-  }
+  /* Matriz 8x2 con Expand On Hover: el logro activo se ensancha y los vecinos de su fila se angostan */
+  #t-matrix { --gap: 10px; --cell: calc((min(100vw, 1200px) - 4rem - 7 * var(--gap)) / 8); display: flex; flex-direction: column; gap: var(--gap); }
+  .t-row { display: flex; gap: var(--gap); height: var(--cell); }
+  .t-cell { position: relative; flex: 1 1 0px; min-width: 0; border-radius: var(--r); overflow: hidden; cursor: pointer; background: var(--dark2); outline: none; transition: flex-grow 0.6s cubic-bezier(0.25, 1, 0.5, 1), flex-basis 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+  /* El cuadrado activo se ensancha a 1,5 veces su altura; la altura de la imagen no cambia */
+  .t-row.has-active .t-cell.active { flex: 0 0 calc(var(--cell) * 1.5); }
+  .t-cell:focus-visible { box-shadow: 0 0 0 2px var(--green); }
+  .t-cell-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 40%; filter: brightness(0.5) grayscale(40%); transition: filter 0.6s ease; }
+  .t-cell:hover .t-cell-img, .t-cell.active .t-cell-img { filter: none; }
+  .t-cell::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.88) 6%, rgba(0,0,0,0) 68%); pointer-events: none; }
+  /* Más oscuridad detrás del texto cuando el cuadrado está expandido (fotos claras) */
+  .t-cell.active::after { background: linear-gradient(to top, rgba(0,0,0,0.92) 12%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0) 90%); }
+  .t-cell-star { position: absolute; top: 9px; right: 9px; width: 20px; height: 20px; z-index: 3; fill: none; stroke: rgba(255,255,255,0.55); stroke-width: 1.6; stroke-linejoin: round; transition: fill 0.35s, stroke 0.35s, filter 0.35s; }
+  .t-cell.active .t-cell-star { fill: #FFD700; stroke: #FFD700; filter: drop-shadow(0 0 5px rgba(255,215,0,0.7)); }
+  .t-cell-info { position: absolute; left: 14px; right: 14px; bottom: 12px; z-index: 3; min-width: 0; }
+  .t-cell-fecha { font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; letter-spacing: 0.12em; color: var(--green); line-height: 1.15; text-transform: uppercase; }
+  .t-cell-fecha span { display: block; }
+  .t-cell.active .t-cell-fecha span { display: inline; }
+  .t-cell.active .t-cell-fecha .y::before { content: '-'; }
+  .t-cell-piloto, .t-cell-cat { opacity: 0; max-height: 0; overflow: hidden; transform: translateY(8px); transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease; }
+  .t-cell-piloto { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.82rem; line-height: 1.2; color: var(--white); margin-top: 4px; letter-spacing: 0.01em; }
+  .t-cell-cat { font-family: 'Barlow', sans-serif; font-size: 0.72rem; font-weight: 300; line-height: 1.3; color: var(--light); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-top: 2px; }
+  .t-cell.active .t-cell-piloto, .t-cell.active .t-cell-cat { opacity: 1; max-height: 4em; transform: none; transition-delay: 0.25s; }
 
   /* Línea de tiempo inferior */
   #t-timeline-container {
-    max-width: 1200px;
-    margin: 3rem auto 0;
-    padding: 0 2rem;
+    width: 100%;
+    margin: 2rem 0 0;
+    padding: 0;
     position: relative;
     height: 40px;
   }
-  #t-timeline-track {
+  #t-timeline-track, .lb-tl-track {
     position: absolute;
     top: 50%;
-    left: 2rem;
-    right: 2rem;
+    left: 0;
+    right: 0;
     height: 4px;
     background: rgba(255,255,255,0.1);
     border-radius: 2px;
     transform: translateY(-50%);
   }
-  #t-timeline-progress {
+  #t-timeline-progress, .lb-tl-progress {
     position: absolute;
     left: 0;
     top: 0;
@@ -415,11 +293,12 @@
   }
 
   /* ============ INGENIERIA ============ */
-  #ingenieria { background: var(--dark); }
+  /* Ingeniería: el cuadrille se degrada en la parte superior y desde ahí el fondo es negro liso */
+  #ingenieria { position: relative; background: linear-gradient(var(--black), var(--black)) 0 calc(var(--fade-h) - 1px) / 100% calc(100% - var(--fade-h) + 1px) no-repeat; }
   .metodo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5px; background: rgba(57,255,20,0.15); margin-bottom: 4rem; }
   .metodo-card { background: var(--dark2); padding: 2.5rem 2rem; position: relative; overflow: hidden; transition: background 0.3s; }
   .metodo-card:hover { background: var(--dark3); }
-  .metodo-number { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; color: rgba(57,255,20,0.12); position: absolute; top: 1rem; right: 1.5rem; line-height: 1; pointer-events: none; }
+  .metodo-number { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 3rem; color: rgba(57,255,20,0.12); position: absolute; top: 1rem; right: 1.5rem; line-height: 1; pointer-events: none; }
   .metodo-icon { width: 40px; height: 40px; background: rgba(57,255,20,0.1); border: 1px solid rgba(57,255,20,0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 1.2rem; font-size: 1.1rem; }
   .metodo-card h3 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.1rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--white); margin-bottom: 0.7rem; }
   .metodo-card p { font-size: 0.88rem; color: var(--gray); line-height: 1.7; font-weight: 300; }
@@ -496,9 +375,10 @@
     pointer-events: none; /* Para que el ratón interactúe fluidamente con la caja */
   }
   .curso-device {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.5rem;
-    letter-spacing: 0.08em;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 1.7rem;
+    letter-spacing: 0.04em;
     color: var(--white);
     text-shadow: 0 4px 15px rgba(0,0,0,0.9);
     transition: color 0.4s ease, transform 0.4s ease;
@@ -591,7 +471,7 @@
   .pack-badge { position: absolute; top: 1rem; right: 1rem; font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; background: var(--green); color: var(--black); padding: 3px 10px; }
   .pack-card:hover { background: #1a1a1a; }
   .pack-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 300; font-size: 0.85rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gray); margin-bottom: 0; }
-  .pack-tier { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 0.08em; margin-bottom: 0.3rem; line-height: 1; }
+  .pack-tier { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.5rem; letter-spacing: 0.04em; margin-bottom: 0.3rem; line-height: 1; }
   .pack-tier.rookie { color: var(--light); }
   .pack-tier.pole { color: var(--green); }
   .pack-tier.champion { color: var(--light); }
@@ -602,13 +482,14 @@
   .pack-features li::before { content: '›'; color: var(--green); font-size: 1rem; font-weight: 700; flex-shrink: 0; margin-top: -1px; }
 
   /* ============ PILOTOS ============ */
-  #pilotos { background: var(--dark); padding: 80px 0; }
+  /* Quienes confían en AM: el cuadrille reaparece (efecto inverso) y sigue hasta el final de la página */
+  #pilotos { position: relative; background: transparent; padding: 80px 0; }
   .pilotos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: rgba(57,255,20,0.15); margin: 2rem 0 2.5rem; }
   .piloto-card { position: relative; aspect-ratio: 1/1; background: var(--dark2); overflow: hidden; cursor: pointer; }
   .piloto-card-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; opacity: 1; filter: grayscale(100%); transition: filter 0.4s ease, opacity 0.4s ease; z-index: 1; }
   .piloto-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 30%, rgba(0,0,0,0.2) 100%); opacity: 0.8; transition: opacity 0.4s ease; z-index: 2; }
   .piloto-card-name { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 3; padding: 1rem; text-align: center; }
-  .piloto-card-name span { font-family: 'Bebas Neue', sans-serif; font-size: clamp(0.9rem, 2vw, 1.3rem); letter-spacing: 0.08em; color: var(--white); line-height: 1.1; transition: color 0.3s, transform 0.3s; }
+  .piloto-card-name span { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: clamp(0.7rem, 1.4vw, 1rem); letter-spacing: 0.04em; color: var(--white); line-height: 1.1; transition: color 0.3s, transform 0.3s; }
   .piloto-card-years { position: absolute; bottom: 10px; right: 12px; font-family: 'Barlow Condensed', sans-serif; font-size: 0.68rem; letter-spacing: 0.15em; color: rgba(57,255,20,0.7); z-index: 4; transition: color 0.3s; }
   .piloto-card::before { content: ''; position: absolute; inset: 0; border: 1px solid rgba(57,255,20,0.1); z-index: 5; transition: border-color 0.3s; pointer-events: none; }
   
@@ -629,10 +510,10 @@
   .star-icon { font-size: 11px; color: #777; line-height: 1; transition: color 0.35s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
 
   /* ============ CONTACTO ============ */
-  #contacto { background: var(--black); position: relative; overflow: hidden; }
+  #contacto { background: transparent; position: relative; overflow: hidden; }
   .contacto-am-watermark {position: absolute; right: -4vw; bottom: -4vw; width: 50vw; max-width: 600px; pointer-events: none; z-index: 0; filter: invert(1) sepia(1) saturate(10) hue-rotate(80deg) brightness(0.4); opacity: 0.15; user-select: none; } 
   .contacto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; position: relative; z-index: 1; }
-  .contacto-left h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 0.95; color: var(--white); margin-bottom: 1.5rem; }
+  .contacto-left h2 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: clamp(1.6rem, 3.2vw, 2.6rem); line-height: 1.12; color: var(--white); margin-bottom: 1.5rem; }
   .contacto-left h2 .green { color: var(--green); }
   .contacto-left p { font-size: 0.95rem; color: var(--gray); line-height: 1.7; font-weight: 300; margin-bottom: 2.5rem; }
   .contact-items { display: flex; flex-direction: column; gap: 1rem; }
@@ -656,10 +537,12 @@
   .form-note { font-size: 0.75rem; color: var(--gray); text-align: center; font-weight: 300; font-style: italic; }
 
   /* ============ FOOTER ============ */
-  footer { background: var(--dark); border-top: 1px solid rgba(57,255,20,0.15); padding: 3rem 0; }
+  footer { background: var(--black); border-top: 1px solid rgba(57,255,20,0.15); padding: 3rem 0; }
   .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
-  .footer-brand { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.12em; color: var(--white); }
-  .footer-tagline { font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--green); margin-top: 2px; }
+  .footer-wordmark { display: block; width: min(300px, 70vw); height: auto; }
+  .footer-wordmark .wm-w { fill: var(--white); }
+  .footer-wordmark .wm-g { fill: var(--green); }
+  .footer-tagline { font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 0.62rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--green); margin-top: 12px; }
   .footer-copy { font-size: 0.78rem; color: var(--gray); font-weight: 300; }
   .green-strip { height: 4px; background: var(--green); }
 
@@ -673,7 +556,7 @@
   /* ============ RESPONSIVE ============ */
   @media (max-width: 1024px) {
     .pilotos-grid { grid-template-columns: repeat(3, 1fr); }
-    .piloto-card-name span { font-size: clamp(0.8rem, 2.5vw, 1.1rem); }
+    .piloto-card-name span { font-size: clamp(0.65rem, 1.8vw, 0.9rem); }
   }
 
   @media (max-width: 768px) {
@@ -706,9 +589,10 @@
     .historia-stats { grid-template-columns: 1fr 1fr; }
     .form-row { grid-template-columns: 1fr; }
     section { padding: 70px 0; }
+    .section-title { font-size: clamp(1.5rem, 6.4vw, 2.1rem); }
 
     .pilotos-grid { grid-template-columns: repeat(2, 1fr); }
-    .piloto-card-name span { font-size: 0.85rem; }
+    .piloto-card-name span { font-size: 0.68rem; }
     .piloto-card-years { font-size: 0.62rem; bottom: 6px; right: 8px; }
 
     .media-accordion { flex-direction: column; height: 750px; }
@@ -719,32 +603,20 @@
       bottom: 20px; left: 20px; font-size: 1.2rem; white-space: normal;
     }
 
-    /* Adaptaciones Carrusel y Elementos Split Responsive */
-    #t-stars-nav {
-      overflow-x: auto;
-      gap: 12px;
-      padding: 0 1rem;
-      justify-content: space-between;
-    }
-    .flat-star { width: 22px; height: 22px; flex-shrink: 0; }
+    /* Trayectoria en celular: la matriz de 2 filas se desliza en horizontal y el logro tocado se expande */
+    #trayectoria-vitrina { padding: 70px 0 60px; }
+    #t-matrix { --cell: 31vw; --open: 72vw; margin: 0 -2rem; padding: 0 2rem 4px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    #t-matrix::-webkit-scrollbar { display: none; }
+    .t-row { width: max-content; }
+    .t-cell { flex: 0 0 var(--cell); transition: flex-basis 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+    .t-row.has-active .t-cell.active { flex: 0 0 var(--open); }
+    .t-cell-info { left: 11px; right: 11px; bottom: 10px; }
+    .t-cell-piloto { font-size: 0.95rem; }
+    .t-cell-cat { font-size: 0.72rem; }
+    .t-cell-star { top: 8px; right: 8px; width: 18px; height: 18px; }
+
+    .curso-device { font-size: 1.15rem; }
     
-    .t-slide-info-box {
-      left: 1rem;
-      right: 1rem;
-      width: auto;
-      max-width: none;
-      padding: 1rem 1.5rem;
-      bottom: 20px;
-    }
-    .t-slide-piloto { font-size: 1.8rem; }
-    .t-slide-cat { font-size: 0.9rem; }
-    
-    .curso-device { font-size: 1.5rem; }
-    
-    /* El paneo en móviles cambia a movimiento horizontal (Left to Right) */
-    .t-slide.active .t-slide-bg {
-       animation: panMobile var(--pan-duration, 7000ms) ease-in-out forwards;
-    }
   }
 
   @media (max-width: 480px) {
@@ -752,12 +624,79 @@
     .hero-eyebrow { letter-spacing: 0.22em; font-size: 0.62rem; margin-right: -0.22em; margin-top: 0.6rem; }
     .hero-subtitle-bar { letter-spacing: 0.3em; padding-left: 0.3em; margin-top: 1.8rem; margin-bottom: 1.8rem; }
   }
+  /* Títulos de sección en una sola línea en PC (en celular se mantienen en dos) */
+  @media (min-width: 769px) {
+    .section-title br { display: none; }
+    .section-title br + .green { margin-left: 0.3em; }
+  }
+
+  /* ============ LIGHTBOX DE ÉXITOS (v2.26) ============ */
+  #t-lightbox { position: fixed; inset: 0; z-index: 1500; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 64px 1rem 24px; opacity: 0; transition: opacity 0.28s ease; }
+  #t-lightbox[hidden] { display: none; }
+  #t-lightbox.open { opacity: 1; }
+  .lb-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.9); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  .lb-close { position: absolute; top: 16px; right: 16px; z-index: 3; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(57,255,20,0.4); background: rgba(10,10,10,0.8); color: var(--green); font-size: 1.5rem; line-height: 1; cursor: pointer; transition: background 0.25s, color 0.25s, transform 0.25s; }
+  .lb-close:hover { background: var(--green); color: var(--black); transform: rotate(90deg); }
+  .lb-stage { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: clamp(0.6rem, 2vw, 1.6rem); width: min(1240px, 100%); }
+  .lb-figure { margin: 0; flex: 0 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: center; }
+  .lb-img { display: block; max-width: 100%; max-height: calc(100vh - 300px); width: auto; height: auto; border-radius: var(--r); object-fit: contain; background: var(--dark2); box-shadow: 0 20px 60px rgba(0,0,0,0.6); opacity: 0; transform: scale(0.985); transition: opacity 0.3s ease, transform 0.3s ease; }
+  .lb-img.show { opacity: 1; transform: none; }
+  .lb-caption { margin-top: 14px; text-align: center; }
+  .lb-fecha { font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; letter-spacing: 0.2em; color: var(--green); }
+  .lb-piloto { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.15rem; color: var(--white); margin: 4px 0 2px; }
+  .lb-cat { font-size: 0.88rem; font-weight: 300; color: var(--light); }
+  .lb-count { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; letter-spacing: 0.25em; color: var(--gray); margin-top: 6px; }
+  .lb-arrow { flex: none; width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(57,255,20,0.4); background: rgba(10,10,10,0.7); color: var(--green); font-size: 1.6rem; line-height: 1; cursor: pointer; transition: background 0.25s, color 0.25s, transform 0.25s; display: flex; align-items: center; justify-content: center; }
+  .lb-arrow:hover { background: var(--green); color: var(--black); }
+  .lb-prev:hover { transform: translateX(-3px); }
+  .lb-next:hover { transform: translateX(3px); }
+  .lb-timeline { position: relative; z-index: 2; width: min(1100px, calc(100% - 2rem)); height: 40px; margin-top: 22px; }
+  .lb-tl-track { }
+  @media (max-width: 768px) {
+    #t-lightbox { padding: 60px 0.6rem 16px; }
+    .lb-arrow { position: absolute; top: 38%; width: 40px; height: 40px; font-size: 1.3rem; background: rgba(10,10,10,0.75); z-index: 3; }
+    .lb-prev { left: 6px; }
+    .lb-next { right: 6px; }
+    .lb-img { max-height: calc(100vh - 290px); }
+    .lb-prev:hover, .lb-next:hover { transform: none; }
+  }
+
+  /* ============ EXPANDABLE SCREEN DE CONTACTO (v2.26) ============
+     Réplica en JS/CSS del componente Expandable Screen de cult-ui: el botón se transforma en una pantalla grande. */
+  #xs-root { position: fixed; inset: 0; z-index: 2000; }
+  #xs-root[hidden] { display: none; }
+  .xs-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.72); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .xs-panel { position: absolute; overflow: hidden; background: #0c0c0c; border: 1px solid rgba(57,255,20,0.22); box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+  .xs-content { position: absolute; top: 0; left: 0; overflow-y: auto; box-sizing: border-box; opacity: 0; transition: opacity 0.35s ease 0.18s; display: flex;
+    padding: clamp(3.5rem, 7vw, 5rem) clamp(1.2rem, 5vw, 4rem) 3rem;
+    background-color: #0a0a0a; background-image: conic-gradient(#101010 25%, #0a0a0a 0 50%, #101010 0 75%, #0a0a0a 0); background-size: 160px 160px; }
+  #xs-root.show .xs-content { opacity: 1; }
+  .xs-content .contacto-grid { width: 100%; max-width: 1100px; margin: auto; gap: 4rem; }
+  .xs-close { position: absolute; top: 16px; right: 16px; z-index: 5; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(57,255,20,0.4); background: rgba(10,10,10,0.85); color: var(--green); font-size: 1.5rem; line-height: 1; cursor: pointer; opacity: 0; transition: opacity 0.3s ease 0.25s, background 0.25s, color 0.25s, transform 0.25s; }
+  #xs-root.show .xs-close { opacity: 1; }
+  .xs-close:hover { background: var(--green); color: var(--black); transform: rotate(90deg); }
+  @media (max-width: 768px) { .xs-content .contacto-grid { gap: 2.5rem; } }
+
+  /* ============ ESQUINAS REDONDEADAS (v2.25) ============ */
+  .nav-cta, .btn-primary, .btn-secondary, .form-submit, .hero-btn { clip-path: none; border-radius: var(--r-sm); }
+  .historia-stats, .metodo-grid, .packs-grid, .valor-grid { border-radius: var(--r); overflow: hidden; }
+  .pilotos-grid { gap: 10px; background: none; }
+  .piloto-card, .piloto-card::before { border-radius: var(--r); }
+  .tech-section, .contact-item, .split-logger-container, .acc-item { border-radius: var(--r); }
+  .xs-panel { border-radius: 24px; }
+  .tech-section, .split-logger-container { overflow: hidden; }
+  .tech-tag, .pack-badge { border-radius: 999px; }
+  .pack-badge { padding: 3px 12px; }
+  .metodo-icon, .contact-icon { border-radius: var(--r-sm); }
+  .form-group input, .form-group select, .form-group textarea { border-radius: var(--r-sm); }
   @media (prefers-reduced-motion: reduce) {
     .hero-logo, .hero-wordmark, .hero-eyebrow, .hero-subtitle-bar, .hero-buttons { animation: none; }
   }
 </style>
 </head>
 <body>
+
+<div class="grid-light" aria-hidden="true"></div>
 
 <nav id="mainNav">
   <a href="#hero" class="nav-logo">
@@ -778,9 +717,6 @@
 </nav>
 
 <section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-shine"></div>
-  <div class="hero-accent-bar"></div>
   <div class="hero-content">
     <div class="hero-brand">
       <img class="hero-logo" src="fotos/logos/am_logo.png" alt="Advanced Motorsport">
@@ -804,13 +740,15 @@
 
 <section id="historia" class="carbon">
   <div class="container">
+    <div class="historia-head reveal">
+      <div class="section-label">Nuestra historia</div>
+      <h2 class="section-title">FORJANDO<br><span class="green">CAMPEONES</span></h2>
+      <div class="green-line"></div>
+    </div>
     <div class="historia-grid reveal">
       <div class="historia-text">
-        <div class="section-label">Nuestra historia</div>
-        <h2 class="section-title">FORJANDO<br><span class="green">CAMPEONES</span></h2>
-        <div class="green-line"></div>
-        <p>Advanced Motorsport nace con el objetivo de formar una <strong>academia de pilotos profesionales</strong> de exportación, estableciendo el <strong>desarrollo humano y deportivo</strong> que los lleve a la victoria.</p>
-        <p>Desde 2022, nos dedicamos a la optimización del rendimiento en vehículos de competición, combinando análisis técnico de vanguardia con una metodología integral de desarrollo del piloto en el sector de neurociencia.</p>
+        <p>Advanced Motorsport nació de la convicción de que la <strong>ingeniería de precisión</strong> y el desarrollo humano son los pilares de la victoria.</p>
+        <p>Desde 2022, nos dedicamos exclusivamente a la optimización del rendimiento en vehículos de competición, combinando análisis técnico de vanguardia con una metodología integral de desarrollo del piloto.</p>
         <p>No solo analizamos datos. Convertimos esa información en ventajas competitivas reales, medibles y sostenibles en el tiempo.</p>
         <div class="historia-quote">
           <p>"La diferencia entre ganar y participar se mide en milésimas. Nosotros trabajamos esas milésimas."</p>
@@ -821,7 +759,7 @@
         <div class="h-stat"><div class="h-stat-num">16</div><div class="h-stat-label">Reconocimientos de alto nivel</div></div>
         <div class="h-stat"><div class="h-stat-num">12</div><div class="h-stat-label">Campeonatos nacionales y regionales</div></div>
         <div class="h-stat"><div class="h-stat-num">4</div><div class="h-stat-label">Victorias en trofeos importantes</div></div>
-        <div class="h-stat"><div class="h-stat-num">360°</div><div class="h-stat-label">Servicio integral continuo</div></div>
+        <div class="h-stat"><div class="h-stat-num">360°</div><div class="h-stat-label">Servicio integral por jornada</div></div>
       </div>
     </div>
   </div>
@@ -829,33 +767,29 @@
 
 <!-- ================= NUEVA SECCIÓN TRAYECTORIA CARRUSEL + TIMELINE ================= -->
 <section id="trayectoria-vitrina">
-  <div class="trayectoria-header reveal">
-    <div class="section-label">Taking you to the first place</div>
-    <h2 class="section-title">NUESTRA<br><span class="green">TRAYECTORIA</span></h2>
-    <div class="green-line"></div>
-  </div>
+  <div class="container">
+    <div class="trayectoria-header reveal">
+      <div class="section-label">Palmarés</div>
+      <h2 class="section-title">NUESTROS<br><span class="green">ÉXITOS</span></h2>
+      <div class="green-line"></div>
+    </div>
 
-  <!-- Contenedor superior de estrellas planas (Selector extendido al 100% del ancho) -->
-  <div id="t-stars-nav" class="reveal">
-     <!-- Inyectado vía JS -->
-  </div>
+    <!-- Matriz 8x2 de logros (inyectada vía JS): al apoyarse en un cuadrado se ensancha -->
+    <div id="t-matrix" class="reveal"></div>
 
-  <!-- Carrusel Ancho Total -->
-  <div id="t-carousel-wrapper" class="reveal">
-     <!-- Slides inyectados vía JS -->
-  </div>
-
-  <!-- Línea de Tiempo Dinámica Inferior -->
-  <div id="t-timeline-container" class="reveal">
-    <div id="t-timeline-track">
-      <div id="t-timeline-progress"></div>
-      <div id="t-timeline-markers"></div>
+    <!-- Línea de tiempo dinámica inferior -->
+    <div id="t-timeline-container" class="reveal">
+      <div id="t-timeline-track">
+        <div id="t-timeline-progress"></div>
+        <div id="t-timeline-markers"></div>
+      </div>
     </div>
   </div>
 </section>
 <!-- ================= FIN SECCIÓN TRAYECTORIA ================= -->
 
 <section id="ingenieria" class="carbon">
+  <svg class="grid-fade" viewBox="0 0 100 510.83" preserveAspectRatio="none" aria-hidden="true" focusable="false"><rect y="32" width="100" height="2"/><rect y="61.52" width="100" height="2.22"/><rect y="87.41" width="100" height="2.46"/><rect y="110.23" width="100" height="2.74"/><rect y="130.46" width="100" height="3.04"/><rect y="148.55" width="100" height="3.37"/><rect y="164.87" width="100" height="3.74"/><rect y="179.75" width="100" height="4.15"/><rect y="193.47" width="100" height="4.61"/><rect y="206.32" width="100" height="5.12"/><rect y="218.51" width="100" height="5.68"/><rect y="230.28" width="100" height="6.3"/><rect y="241.82" width="100" height="7"/><rect y="253.33" width="100" height="7.77"/><rect y="264.97" width="100" height="8.62"/><rect y="276.92" width="100" height="9.57"/><rect y="289.35" width="100" height="10.62"/><rect y="302.44" width="100" height="11.79"/><rect y="316.35" width="100" height="13.09"/><rect y="331.26" width="100" height="14.53"/><rect y="347.35" width="100" height="16.12"/><rect y="364.82" width="100" height="17.9"/><rect y="383.88" width="100" height="19.87"/><rect y="404.74" width="100" height="22.05"/><rect y="427.65" width="100" height="24.48"/><rect y="452.87" width="100" height="27.17"/><rect y="480.67" width="100" height="30.16"/></svg>
   <div class="container">
     <div class="reveal">
       <div class="section-label">AM Engineering</div>
@@ -869,7 +803,7 @@
         <div class="metodo-number">01</div>
         <div class="metodo-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#39FF14" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
         <h3>Evaluación inicial personalizada</h3>
-        <p>Análisis del nivel actual, detección de áreas de mejora y propuesta de proyección.</p>
+        <p>Análisis del nivel actual, detección de áreas de mejora críticas y propuesta de configuración óptima para el vehículo.</p>
       </div>
       <div class="metodo-card">
         <div class="metodo-number">02</div>
@@ -881,26 +815,26 @@
         <div class="metodo-number">03</div>
         <div class="metodo-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#39FF14" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 4-8"/></svg></div>
         <h3>Plan de progreso continuo</h3>
-        <p>Diseño de un plan de entrenamiento alineado con las metas profesionales del piloto, con objetivos claros y alcanzables.</p>
+        <p>Diseño de un plan de entrenamiento alineado con las metas profesionales del piloto, con objetivos claros y seguimiento evolutivo.</p>
       </div>
       <div class="metodo-card">
         <div class="metodo-number">04</div>
         <div class="metodo-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#39FF14" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
         <h3>Trazabilidad evolutiva</h3>
-        <p>Reportes regulares de carrera con el progreso del piloto a lo largo de todo el plan.</p>
+        <p>Reportes Pre/Post Carrera detallados que documentan la progresión del piloto a lo largo de todo el programa.</p>
       </div>
     </div>
     <div class="tech-section reveal">
       <div class="tech-label">Tecnología &amp; Análisis de Precisión</div>
       <p style="font-size:0.88rem; color:var(--gray); margin-bottom:1.5rem; font-weight:300; line-height:1.7;">Trabajamos con y asesoramos sobre los mejores sistemas de adquisición de datos y telemetría del mercado.</p>
       <div class="tech-tags">
-        <span class="tech-tag">MoTeC</span><span class="tech-tag">AiM</span><span class="tech-tag">Alfano</span><span class="tech-tag">UniPro</span><span class="tech-tag">Starlane</span><span class="tech-tag">Dakton</span><span class="tech-tag">Cosworth</span>
+        <span class="tech-tag">MoTeC</span><span class="tech-tag">AiM / MyChron</span><span class="tech-tag">Alfano / ADA</span><span class="tech-tag">UniPro</span><span class="tech-tag">Starlane</span><span class="tech-tag">Dakton</span><span class="tech-tag">Cosworth</span><span class="tech-tag">Telemetría On-Board</span><span class="tech-tag">Análisis de datos</span>
       </div>
     </div>
     <div class="valor-grid reveal">
-      <div class="valor-item"><h4>Experiencia</h4><p>Nuestro equipo está conformado por pilotos, ingenieros, profesionales de la neurociencia, entrenadores físicos, y todos con trayectoria en el automovilismo.</p></div>
-      <div class="valor-item"><h4>Tecnología</h4><p>Utilizamos la tecnología de vanguardia de cada marca, sumado de desarrollos propios que potencian la calidad operativa.</p></div>
-      <div class="valor-item"><h4>Confidencialidad</h4><p>La información de cada cliente es privilegiada en todo tipo de contexto en la academia.</p></div>
+      <div class="valor-item"><h4>Experiencia</h4><p>Equipo compuesto por pilotos, mecánicos e ingenieros con trayectoria real en el automovilismo.</p></div>
+      <div class="valor-item"><h4>Tecnología</h4><p>Utilizamos los mejores sistemas de análisis para asegurar la máxima calidad de información.</p></div>
+      <div class="valor-item"><h4>Confidencialidad</h4><p>La data de cada cliente es información privilegiada. Garantizamos total seguridad de sus set-ups.</p></div>
     </div>
   </div>
 </section>
@@ -910,11 +844,11 @@
 
     <div class="reveal">
       <div class="section-label">AM Engineering</div>
-      <h2 class="section-title">CAPACITACIONES<br><span class="green">VIRTUALES</span></h2>
+      <h2 class="section-title">CAPACITACIONES<br><span class="green">ONLINE</span></h2>
       <div class="green-line"></div>
       
       <div style="max-width:100%; text-align:left; color:var(--gray); font-size:0.95rem; line-height:1.8; font-weight:300; margin-bottom:2rem;">
-        <p style="margin-bottom: 1.5rem;">Clases personalizadas según tu nivel y el sistema que utilices, diseñadas para ingenieros de pista, ingenieros de performance, jefes de equipo, mecánicos, pilotos y aficionados que buscan transformar sus datos en victorias. A través de este programa intensivo, te guiaremos desde los conceptos iniciales hasta técnicas profesionales avanzadas para exprimir cada milésima de segundo en pista, olvidarte de las conjeturas y tomar decisiones basadas en evidencia sólida.</p>
+        <p style="margin-bottom: 1.5rem;">Clases personalizadas según tu nivel y el sistema que utilices, diseñadas específicamente para ingenieros de pista, ingenieros de performance, jefes de equipo, mecánicos, pilotos y aficionados que buscan transformar sus datos en victorias. A través de este programa intensivo, te guiaremos desde los conceptos iniciales hasta técnicas profesionales avanzadas para exprimir cada milésima de segundo en pista, olvidarte de las conjeturas y tomar decisiones basadas en evidencia sólida.</p>
         <p style="margin-bottom: 1.5rem;">Nuestro programa integral abarca:</p>
         
         <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem; color: var(--light);">
@@ -972,7 +906,7 @@
     </div>
     <!-- ================= FIN VISTA SPLIT-SCREEN ================= -->
     
-    <div class="reveal" style="background:var(--dark2); border:1px solid rgba(57,255,20,0.12); padding:2rem 2.5rem; display:flex; align-items:center; gap:2rem; flex-wrap:wrap; margin-bottom: 3rem;">
+    <div class="reveal" style="background:var(--dark2); border:1px solid rgba(57,255,20,0.12); border-radius:var(--r); padding:2rem 2.5rem; display:flex; align-items:center; gap:2rem; flex-wrap:wrap; margin-bottom: 3rem;">
       <div style="flex:1; min-width:200px;">
         <div style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.75rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--green); margin-bottom:0.5rem;">¿Cómo funciona?</div>
         <p style="font-size:0.88rem; color:var(--gray); line-height:1.7; font-weight:300;">Coordinamos día y horario por WhatsApp. La clase se dicta en vivo por videollamada compartiendo pantalla, lo que te permite aprender en tiempo real y tener el software abierto en tu computadora simultáneamente.</p>
@@ -1081,6 +1015,7 @@
 </section>
 
 <section id="pilotos" class="carbon">
+  <svg class="grid-fade in" viewBox="0 0 100 510.83" preserveAspectRatio="none" aria-hidden="true" focusable="false"><rect y="32" width="100" height="2"/><rect y="61.52" width="100" height="2.22"/><rect y="87.41" width="100" height="2.46"/><rect y="110.23" width="100" height="2.74"/><rect y="130.46" width="100" height="3.04"/><rect y="148.55" width="100" height="3.37"/><rect y="164.87" width="100" height="3.74"/><rect y="179.75" width="100" height="4.15"/><rect y="193.47" width="100" height="4.61"/><rect y="206.32" width="100" height="5.12"/><rect y="218.51" width="100" height="5.68"/><rect y="230.28" width="100" height="6.3"/><rect y="241.82" width="100" height="7"/><rect y="253.33" width="100" height="7.77"/><rect y="264.97" width="100" height="8.62"/><rect y="276.92" width="100" height="9.57"/><rect y="289.35" width="100" height="10.62"/><rect y="302.44" width="100" height="11.79"/><rect y="316.35" width="100" height="13.09"/><rect y="331.26" width="100" height="14.53"/><rect y="347.35" width="100" height="16.12"/><rect y="364.82" width="100" height="17.9"/><rect y="383.88" width="100" height="19.87"/><rect y="404.74" width="100" height="22.05"/><rect y="427.65" width="100" height="24.48"/><rect y="452.87" width="100" height="27.17"/><rect y="480.67" width="100" height="30.16"/></svg>
   <div class="container">
     <div class="reveal">
       <div class="section-label">Nuestros pilotos</div>
@@ -1106,13 +1041,6 @@
       </div>
       
       <div class="piloto-card" data-logros="0">
-        <img class="piloto-card-photo" src="fotos/pilotos/bastian_soetberg.jpg" alt="Bastian Soetberg" onerror="this.style.display='none'">
-        <div class="piloto-card-overlay"></div>
-        <div class="piloto-card-name"><span>Bastian<br>Soetberg</span></div>
-        <div class="piloto-card-years">2026</div>
-      </div>
-
-      <div class="piloto-card" data-logros="0">
         <img class="piloto-card-photo" src="fotos/pilotos/bruno_medeot.jpg" alt="Bruno Medeot" onerror="this.style.display='none'">
         <div class="piloto-card-overlay"></div>
         <div class="piloto-card-name"><span>Bruno<br>Medeot</span></div>
@@ -1131,13 +1059,6 @@
         <div class="piloto-card-overlay"></div>
         <div class="piloto-card-name"><span>Damian<br>Galgani</span></div>
         <div class="piloto-card-years">2024 — 2026</div>
-      </div>
-
-      <div class="piloto-card" data-logros="0">
-        <img class="piloto-card-photo" src="fotos/pilotos/elias_bustos.jpg" alt="Elias Bustos" onerror="this.style.display='none'">
-        <div class="piloto-card-overlay"></div>
-        <div class="piloto-card-name"><span>Elias<br>Bustos</span></div>
-        <div class="piloto-card-years">2026</div>
       </div>
 
       <div class="piloto-card" data-logros="0">
@@ -1169,6 +1090,13 @@
       </div>
       
       <div class="piloto-card" data-logros="0">
+        <img class="piloto-card-photo" src="fotos/pilotos/gennaro_mottesi.jpg" alt="Gennaro Mottesi" onerror="this.style.display='none'">
+        <div class="piloto-card-overlay"></div>
+        <div class="piloto-card-name"><span>Gennaro<br>Mottesi</span></div>
+        <div class="piloto-card-years">2024 — 2026</div>
+      </div>
+
+      <div class="piloto-card" data-logros="0">
         <img class="piloto-card-photo" src="fotos/pilotos/giuliano_trani.jpg" alt="Giuliano Trani" onerror="this.style.display='none'">
         <div class="piloto-card-overlay"></div>
         <div class="piloto-card-name"><span>Giuliano<br>Trani</span></div>
@@ -1180,14 +1108,7 @@
         <div class="piloto-card-overlay"></div>
         <div class="piloto-card-name"><span>Juan<br>Urfini</span></div>
         <div class="piloto-card-years">2026</div>
-      </div>
-
-      <div class="piloto-card" data-logros="0">
-        <img class="piloto-card-photo" src="fotos/pilotos/juan_martin_lage.jpg" alt="Juan Martin Lage" onerror="this.style.display='none'">
-        <div class="piloto-card-overlay"></div>
-        <div class="piloto-card-name"><span>Juan Martin<br>Lage</span></div>
-        <div class="piloto-card-years">2026</div>
-      </div>
+      </div>      
 
       <div class="piloto-card" data-logros="0">
         <img class="piloto-card-photo" src="fotos/pilotos/lautaro_garcia.jpg" alt="Lautaro Garcia" onerror="this.style.display='none'">
@@ -1216,6 +1137,13 @@
         <div class="piloto-card-name"><span>Nicolas<br>Forconi</span></div>
         <div class="piloto-card-years">2025 — 2026</div>
       </div>
+
+      <div class="piloto-card" data-logros="0">
+        <img class="piloto-card-photo" src="fotos/pilotos/noha_vasicek.jpg" alt="Noha Vasicek" onerror="this.style.display='none'">
+        <div class="piloto-card-overlay"></div>
+        <div class="piloto-card-name"><span>Noha<br>Vasicek</span></div>
+        <div class="piloto-card-years">2026</div>
+      </div>
       
       <div class="piloto-card" data-logros="0">
         <img class="piloto-card-photo" src="fotos/pilotos/oreste_durante.jpg" alt="Oreste Durante" onerror="this.style.display='none'">
@@ -1228,13 +1156,6 @@
         <img class="piloto-card-photo" src="fotos/pilotos/santiago_jara.jpg" alt="Santiago Jara" onerror="this.style.display='none'">
         <div class="piloto-card-overlay"></div>
         <div class="piloto-card-name"><span>Santiago<br>Jara</span></div>
-        <div class="piloto-card-years">2025 — 2026</div>
-      </div>
-
-      <div class="piloto-card" data-logros="0">
-        <img class="piloto-card-photo" src="fotos/pilotos/simon_cortes_falcon.jpg" alt="Simon Cortes Falcon" onerror="this.style.display='none'">
-        <div class="piloto-card-overlay"></div>
-        <div class="piloto-card-name"><span>Simon<br>Cortes Falcon</span></div>
         <div class="piloto-card-years">2025 — 2026</div>
       </div>
       
@@ -1367,13 +1288,6 @@
       </div>
       
       <div class="piloto-card" data-logros="0">
-        <img class="piloto-card-photo" src="fotos/pilotos/gennaro_mottesi.jpg" alt="Gennaro Mottesi" onerror="this.style.display='none'">
-        <div class="piloto-card-overlay"></div>
-        <div class="piloto-card-name"><span>Gennaro<br>Mottesi</span></div>
-        <div class="piloto-card-years">2024 — 2025</div>
-      </div>
-      
-      <div class="piloto-card" data-logros="0">
         <img class="piloto-card-photo" src="fotos/pilotos/gian_marco_giraudo.jpg" alt="Gian Marco Giraudo" onerror="this.style.display='none'">
         <div class="piloto-card-overlay"></div>
         <div class="piloto-card-name"><span>Gian Marco<br>Giraudo</span></div>
@@ -1490,13 +1404,6 @@
         <div class="piloto-card-name"><span>Nicolas<br>Rolando</span></div>
         <div class="piloto-card-years">2022</div>
       </div>
-
-      <div class="piloto-card" data-logros="0">
-        <img class="piloto-card-photo" src="fotos/pilotos/noha_vasicek.jpg" alt="Noha Vasicek" onerror="this.style.display='none'">
-        <div class="piloto-card-overlay"></div>
-        <div class="piloto-card-name"><span>Noha<br>Vasicek</span></div>
-        <div class="piloto-card-years">2026</div>
-      </div>
       
       <div class="piloto-card" data-logros="0">
         <img class="piloto-card-photo" src="fotos/pilotos/pablo_moretta.jpg" alt="Pablo Moretta" onerror="this.style.display='none'">
@@ -1516,7 +1423,7 @@
         <img class="piloto-card-photo" src="fotos/pilotos/ramiro_amorelli.jpg" alt="Ramiro Amorelli" onerror="this.style.display='none'">
         <div class="piloto-card-overlay"></div>
         <div class="piloto-card-name"><span>Ramiro<br>Amorelli</span></div>
-        <div class="piloto-card-years">2024 — 2025</div>
+        <div class="piloto-card-years">2024 — 2026</div>
       </div>
       
       <div class="piloto-card" data-logros="0">
@@ -1679,7 +1586,7 @@
   </div>
 </section>
 
-<section id="youtube" style="background: var(--dark); padding: 80px 0;">
+<section id="youtube" style="background: transparent; padding: 80px 0;">
   <div class="container">
     <div class="reveal">
       <div class="section-label">Canal de YouTube</div>
@@ -1688,7 +1595,7 @@
     </div>
     <div class="reveal" style="display:flex; flex-direction:column; align-items:center; gap:2rem;">
 
-      <div id="yt-container" style="width:100%; max-width:800px; aspect-ratio:16/9; border:1px solid rgba(57,255,20,0.2); background:var(--dark2); overflow:hidden; display:flex; align-items:center; justify-content:center;">
+      <div id="yt-container" style="width:100%; max-width:800px; aspect-ratio:16/9; border:1px solid rgba(57,255,20,0.2); border-radius:var(--r); background:var(--dark2); overflow:hidden; display:flex; align-items:center; justify-content:center;">
         <div id="yt-loading" style="display:flex; flex-direction:column; align-items:center; gap:12px;">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
             <circle cx="12" cy="12" r="10" stroke="rgba(57,255,20,0.2)" stroke-width="2"/>
@@ -1796,12 +1703,46 @@
 })();
 </script>
 
+<!-- Lightbox de Nuestros Éxitos -->
+<div id="t-lightbox" hidden role="dialog" aria-modal="true" aria-label="Nuestros éxitos">
+  <div class="lb-backdrop"></div>
+  <button class="lb-close" aria-label="Cerrar">&times;</button>
+  <div class="lb-stage">
+    <button class="lb-arrow lb-prev" aria-label="Anterior">&#8249;</button>
+    <figure class="lb-figure">
+      <img class="lb-img" alt="" draggable="false">
+      <figcaption class="lb-caption">
+        <div class="lb-fecha"></div>
+        <div class="lb-piloto"></div>
+        <div class="lb-cat"></div>
+        <div class="lb-count"></div>
+      </figcaption>
+    </figure>
+    <button class="lb-arrow lb-next" aria-label="Siguiente">&#8250;</button>
+  </div>
+  <div class="lb-timeline">
+    <div class="lb-tl-track">
+      <div class="lb-tl-progress"></div>
+      <div class="lb-tl-markers"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Expandable Screen de contacto (el contenido se clona desde #contacto) -->
+<div id="xs-root" hidden>
+  <div class="xs-backdrop"></div>
+  <div class="xs-panel" role="dialog" aria-modal="true" aria-label="Contacto">
+    <button class="xs-close" aria-label="Cerrar">&times;</button>
+    <div class="xs-content"></div>
+  </div>
+</div>
+
 <div class="green-strip"></div>
 <footer>
   <div class="container">
     <div class="footer-inner">
       <div>
-        <div class="footer-brand">ADVANCED MOTORSPORT</div>
+        <div class="footer-brand"><svg class="footer-wordmark" viewBox="0 0 17468 700" role="img" aria-label="Advanced Motorsport" xmlns="http://www.w3.org/2000/svg"><path class="wm-w" d="M0 700Q10 669 27 619.5Q44 570 65 510.5Q86 451 108.5 386Q131 321 152 260.5Q173 200 191 148Q209 96 220 62L159 20Q152 15 154.5 7.5Q157 0 165 0H1044Q1036 23 1019 73Q1002 123 980 187Q958 251 934 323Q910 395 887.5 462Q865 529 846.5 584Q828 639 818 670Q808 700 776 700H569L631 531H294L246 670Q236 700 204 700ZM343 389H680L747 193Q756 169 726 169H367Q359 169 356.5 176.5Q354 184 360 189L400 225ZM1002 641 1139 247H1373Q1369 258 1362.5 276Q1356 294 1348.5 316Q1341 338 1333 362.5Q1325 387 1317 411L1275 531H1555Q1571 531 1574 518L1690 182Q1696 169 1680 169H1165Q1170 155 1174.5 143Q1179 131 1184 120Q1191 100 1197 83Q1203 66 1205 61L1140 21Q1132 16 1135 8Q1138 0 1146 0H1988L1802 540Q1790 573 1769 602Q1748 631 1719 652.5Q1690 674 1653.5 687Q1617 700 1574 700H1044Q1020 700 1007 681.5Q994 663 1002 641ZM2025 0H2316L2375 327L2364 463Q2363 471 2371 474Q2379 477 2384 471Q2443 401 2488 347.5Q2533 294 2575 243.5Q2617 193 2662.5 139.5Q2708 86 2769 15Q2784 0 2803 0H3035Q3019 18 2988.5 53.5Q2958 89 2917.5 135Q2877 181 2830.5 235.5Q2784 290 2736 345.5Q2688 401 2641.5 454.5Q2595 508 2555.5 554Q2516 600 2486 634Q2456 668 2441 685Q2429 700 2407 700H2196Q2191 672 2181.5 618Q2172 564 2161 498.5Q2150 433 2137.5 362.5Q2125 292 2114.5 230.5Q2104 169 2095.5 123.5Q2087 78 2084 62Q2077 57 2076 56.5Q2075 56 2071.5 53.5Q2068 51 2057.5 44.5Q2047 38 2020 20Q2013 15 2015 8Q2017 1 2025 0ZM3020 700Q3030 669 3047 619.5Q3064 570 3085 510.5Q3106 451 3128.5 386Q3151 321 3172 260.5Q3193 200 3211 148Q3229 96 3240 62L3179 20Q3172 15 3174.5 7.5Q3177 0 3185 0H4064Q4056 23 4039 73Q4022 123 4000 187Q3978 251 3954 323Q3930 395 3907.5 462Q3885 529 3866.5 584Q3848 639 3838 670Q3828 700 3796 700H3589L3651 531H3314L3266 670Q3256 700 3224 700ZM3363 389H3700L3767 193Q3776 169 3746 169H3387Q3379 169 3376.5 176.5Q3374 184 3380 189L3420 225ZM4014 700Q4022 676 4037.5 631Q4053 586 4073 529Q4093 472 4115.5 407Q4138 342 4160.5 278.5Q4183 215 4202.5 158.5Q4222 102 4236 61L4175 20Q4167 15 4170 7.5Q4173 0 4181 0H4492L4711 453L4730 306L4836 0H5071L4839 670Q4829 700 4797 700H4606Q4598 683 4585 656.5Q4572 630 4555.5 598Q4539 566 4520.5 530Q4502 494 4484 459Q4463 417 4440.5 374.5Q4418 332 4394 284Q4393 286 4382 317Q4371 348 4355.5 392.5Q4340 437 4322.5 487.5Q4305 538 4290.5 580.5Q4276 623 4267 649Q4258 675 4260 670Q4250 700 4218 700ZM5029 571Q5043 531 5060 482.5Q5077 434 5095.5 382.5Q5114 331 5132 280Q5150 229 5165.5 185.5Q5181 142 5193 109Q5205 76 5210 61L5147 20Q5140 15 5142.5 7.5Q5145 0 5153 0H6037L5991 139Q5986 153 5974 161Q5962 169 5948 169H5326Q5318 169 5315.5 176.5Q5313 184 5319 189L5378 242L5283 518Q5280 529 5291 531H5859L5812 670Q5801 700 5770 700H5120Q5095 700 5074.5 688.5Q5054 677 5041.5 659Q5029 641 5025 618Q5021 595 5029 571ZM5985 573 6160 61Q6158 57 6139.5 44.5Q6121 32 6102 20Q6095 15 6097.5 7.5Q6100 0 6108 0H6902L6854 139Q6843 169 6812 169H6289Q6281 169 6278.5 176.5Q6276 184 6282 189L6336 238L6321 279H6663L6624 391Q6613 421 6582 421H6225Q6217 421 6214.5 428Q6212 435 6217 440L6254 474L6234 531H6719L6670 670Q6660 700 6628 700H6075Q6051 700 6030.5 689Q6010 678 5997.5 660Q5985 642 5981 619Q5977 596 5985 573ZM6850 641 6987 247H7221Q7217 258 7210.5 276Q7204 294 7196.5 316Q7189 338 7181 362.5Q7173 387 7165 411L7123 531H7403Q7419 531 7422 518L7538 182Q7544 169 7528 169H7013Q7018 155 7022.5 143Q7027 131 7032 120Q7039 100 7045 83Q7051 66 7053 61L6988 21Q6980 16 6983 8Q6986 0 6994 0H7836L7650 540Q7638 573 7617 602Q7596 631 7567 652.5Q7538 674 7501.5 687Q7465 700 7422 700H6892Q6868 700 6855 681.5Q6842 663 6850 641Z"/><path class="wm-g" d="M8395 61 8334 20Q8326 15 8329 7.5Q8332 0 8340 0H8615L8657 139Q8666 167 8675 195.5Q8684 224 8692 250Q8700 276 8706.5 297.5Q8713 319 8717 333Q8717 339 8716 354Q8715 369 8714.5 386Q8714 403 8713 418Q8712 433 8712 439Q8723 427 8746.5 402Q8770 377 8800 345Q8830 313 8865 276Q8900 239 8935 202Q8977 159 9020.5 112Q9064 65 9112 14Q9124 0 9144 0H9348Q9346 7 9335.5 38Q9325 69 9309 115.5Q9293 162 9273 219.5Q9253 277 9232.5 336.5Q9212 396 9192 453Q9172 510 9155.5 556.5Q9139 603 9128.5 633.5Q9118 664 9116 670Q9106 700 9074 700H8871L8967 421L8771 612Q8758 624 8740 624H8573L8505 422L8419 670Q8409 700 8377 700H8172Q8179 679 8194.5 635Q8210 591 8230 533Q8250 475 8273 409Q8296 343 8318.5 279Q8341 215 8361 158Q8381 101 8395 61ZM9331 540 9462 159Q9473 126 9494 97.5Q9515 69 9544.5 47Q9574 25 9611 12.5Q9648 0 9690 0H10133Q10172 0 10203.5 11.5Q10235 23 10254.5 44Q10274 65 10280 94Q10286 123 10274 159L10142 540Q10131 572 10110.5 601Q10090 630 10060.5 652Q10031 674 9994 687Q9957 700 9914 700H9472Q9433 700 9401.5 688.5Q9370 677 9350 656Q9330 635 9324 605.5Q9318 576 9331 540ZM9584 531H9895Q9911 531 9914 518L10031 182Q10035 169 10020 169H9613Q9605 169 9602 176.5Q9599 184 9605 189L9667 245L9573 518Q9569 531 9584 531ZM10274 0H11080Q11076 12 11069.5 30Q11063 48 11056 67.5Q11049 87 11042.5 105.5Q11036 124 11031 139Q11021 169 10989 169H10739Q10731 169 10728.5 176.5Q10726 184 10732 189L10793 245L10646 670Q10636 700 10604 700H10400L10585 169H10293Q10294 166 10300.5 150.5Q10307 135 10314.5 116.5Q10322 98 10329 81.5Q10336 65 10337 61L10269 21Q10261 16 10263.5 8Q10266 0 10274 0ZM11028 540 11159 159Q11170 126 11191 97.5Q11212 69 11241.5 47Q11271 25 11308 12.5Q11345 0 11387 0H11830Q11869 0 11900.5 11.5Q11932 23 11951.5 44Q11971 65 11977 94Q11983 123 11971 159L11839 540Q11828 572 11807.5 601Q11787 630 11757.5 652Q11728 674 11691 687Q11654 700 11611 700H11169Q11130 700 11098.5 688.5Q11067 677 11047 656Q11027 635 11021 605.5Q11015 576 11028 540ZM11281 531H11592Q11608 531 11611 518L11728 182Q11732 169 11717 169H11310Q11302 169 11299 176.5Q11296 184 11302 189L11364 245L11270 518Q11266 531 11281 531ZM11933 700Q11945 664 11963 612.5Q11981 561 12001.5 501.5Q12022 442 12044.5 379Q12067 316 12087.5 257Q12108 198 12126 147Q12144 96 12156 61L12096 20Q12089 15 12091.5 7.5Q12094 0 12103 0H12778Q12817 0 12848.5 11.5Q12880 23 12899.5 44Q12919 65 12925 94.5Q12931 124 12919 159Q12899 218 12886 258Q12873 298 12859.5 327Q12846 356 12828.5 378Q12811 400 12781 423Q12755 443 12727.5 452.5Q12700 462 12676 465.5Q12652 469 12634.5 469.5Q12617 470 12611 471L12713 632Q12720 643 12720 655Q12720 667 12714.5 677Q12709 687 12699 693.5Q12689 700 12676 700H12487L12364 471H12251L12182 670Q12172 700 12140 700ZM12273 189Q12282 197 12292.5 205.5Q12303 214 12311 222Q12316 227 12321 231Q12326 235 12331 240L12307 309H12617Q12633 309 12637 296L12640 287Q12642 283 12643.5 277.5Q12645 272 12647 265Q12652 252 12656.5 238Q12661 224 12666 211Q12668 203 12671 196Q12674 189 12676 182Q12682 169 12666 169H12281Q12273 169 12270.5 176.5Q12268 184 12273 189ZM12930 558Q12935 545 12946 537.5Q12957 530 12971 530H13458Q13474 531 13478 518L13505 440Q13510 428 13494 428H13154Q13115 428 13083 416.5Q13051 405 13031 384Q13011 363 13005 333.5Q12999 304 13012 268L13049 159Q13060 126 13081.5 97.5Q13103 69 13132.5 47Q13162 25 13199 12.5Q13236 0 13278 0H13854Q13841 38 13831 69Q13821 100 13809 138Q13799 169 13767 169H13214Q13206 169 13203.5 176.5Q13201 184 13207 189L13258 235L13250 260Q13246 272 13261 272H13602Q13641 272 13672.5 283.5Q13704 295 13724 316Q13744 337 13750 366.5Q13756 396 13743 432L13706 541Q13694 573 13674 602Q13654 631 13626 652.5Q13598 674 13562.5 687Q13527 700 13484 700H12871ZM13804 700Q13814 672 13830 625.5Q13846 579 13866 522.5Q13886 466 13907.5 402.5Q13929 339 13950 277.5Q13971 216 13990 160Q14009 104 14023 61L13964 20Q13957 15 13959.5 7.5Q13962 0 13970 0H14636Q14679 0 14710.5 13.5Q14742 27 14760.5 49Q14779 71 14783.5 100Q14788 129 14777 159L14714 340Q14703 372 14682 401Q14661 430 14631.5 452Q14602 474 14565.5 487Q14529 500 14487 500H14107L14049 670Q14039 700 14007 700ZM14141 189 14198 240 14164 338H14465Q14480 338 14484 326L14534 182Q14534 181 14534.5 180Q14535 179 14534 177Q14532 169 14523 169H14149Q14141 169 14138.5 176.5Q14136 184 14141 189ZM14771 540 14902 159Q14913 126 14934 97.5Q14955 69 14984.5 47Q15014 25 15051 12.5Q15088 0 15130 0H15573Q15612 0 15643.5 11.5Q15675 23 15694.5 44Q15714 65 15720 94Q15726 123 15714 159L15582 540Q15571 572 15550.5 601Q15530 630 15500.5 652Q15471 674 15434 687Q15397 700 15354 700H14912Q14873 700 14841.5 688.5Q14810 677 14790 656Q14770 635 14764 605.5Q14758 576 14771 540ZM15024 531H15335Q15351 531 15354 518L15471 182Q15475 169 15460 169H15053Q15045 169 15042 176.5Q15039 184 15045 189L15107 245L15013 518Q15009 531 15024 531ZM15676 700Q15688 664 15706 612.5Q15724 561 15744.5 501.5Q15765 442 15787.5 379Q15810 316 15830.5 257Q15851 198 15869 147Q15887 96 15899 61L15839 20Q15832 15 15834.5 7.5Q15837 0 15846 0H16521Q16560 0 16591.5 11.5Q16623 23 16642.5 44Q16662 65 16668 94.5Q16674 124 16662 159Q16642 218 16629 258Q16616 298 16602.5 327Q16589 356 16571.5 378Q16554 400 16524 423Q16498 443 16470.5 452.5Q16443 462 16419 465.5Q16395 469 16377.5 469.5Q16360 470 16354 471L16456 632Q16463 643 16463 655Q16463 667 16457.5 677Q16452 687 16442 693.5Q16432 700 16419 700H16230L16107 471H15994L15925 670Q15915 700 15883 700ZM16016 189Q16025 197 16035.5 205.5Q16046 214 16054 222Q16059 227 16064 231Q16069 235 16074 240L16050 309H16360Q16376 309 16380 296L16383 287Q16385 283 16386.5 277.5Q16388 272 16390 265Q16395 252 16399.5 238Q16404 224 16409 211Q16411 203 16414 196Q16417 189 16419 182Q16425 169 16409 169H16024Q16016 169 16013.5 176.5Q16011 184 16016 189ZM16662 0H17468Q17464 12 17457.5 30Q17451 48 17444 67.5Q17437 87 17430.5 105.5Q17424 124 17419 139Q17409 169 17377 169H17127Q17119 169 17116.5 176.5Q17114 184 17120 189L17181 245L17034 670Q17024 700 16992 700H16788L16973 169H16681Q16682 166 16688.5 150.5Q16695 135 16702.5 116.5Q16710 98 16717 81.5Q16724 65 16725 61L16657 21Q16649 16 16651.5 8Q16654 0 16662 0Z"/></svg></div>
         <div class="footer-tagline">Taking you to the first place</div>
       </div>
       <div class="footer-copy">© 2025 Advanced Motorsport — By Ayrton Mastrangelo</div>
@@ -1810,35 +1751,54 @@
 </footer>
 
 <script>
+  // --- Bloqueo de scroll compartido (lightbox y pantalla expandible) ---
+  let scrollLocks = 0;
+  function lockScroll() {
+    if (scrollLocks++ > 0) return;
+    const gap = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = 'hidden';
+    if (gap > 0) document.body.style.paddingRight = gap + 'px';
+  }
+  function unlockScroll() {
+    if (scrollLocks === 0 || --scrollLocks > 0) return;
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+  }
+
   // --- Nav: efecto al hacer scroll ---
   const nav = document.getElementById('mainNav');
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 60);
   });
 
-  // --- Hero: luz tenue que sigue al mouse (solo con mouse; en táctiles queda estático) ---
+  // --- Luz tenue que sigue al mouse sobre el cuadrille (toda la página; solo en dispositivos con mouse) ---
   (function () {
-    const hero = document.getElementById('hero');
-    const shine = hero && hero.querySelector('.hero-shine');
-    if (!shine) return;
+    const light = document.querySelector('.grid-light');
+    if (!light) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    let tx = 0, ty = 0, cx = 0, cy = 0, running = false;
+    let tx = 0, ty = 0, cx = 0, cy = 0, running = false, sy = -1;
+    // La máscara de cuadros se desplaza con el scroll para quedar alineada con el cuadrille de la página
+    function syncScroll() {
+      const v = Math.round(window.scrollY);
+      if (v !== sy) { sy = v; light.style.setProperty('--sy', v + 'px'); }
+    }
     function frame() {
       cx += (tx - cx) * 0.08;
       cy += (ty - cy) * 0.08;
-      shine.style.setProperty('--mx', cx.toFixed(1) + 'px');
-      shine.style.setProperty('--my', cy.toFixed(1) + 'px');
+      light.style.setProperty('--mx', cx.toFixed(1) + 'px');
+      light.style.setProperty('--my', cy.toFixed(1) + 'px');
       if (Math.abs(tx - cx) > 0.3 || Math.abs(ty - cy) > 0.3) requestAnimationFrame(frame);
       else running = false;
     }
-    hero.addEventListener('pointermove', (e) => {
+    document.addEventListener('pointermove', (e) => {
       if (e.pointerType !== 'mouse') return;
-      const r = hero.getBoundingClientRect();
-      tx = e.clientX - r.left; ty = e.clientY - r.top;
-      if (!hero.classList.contains('mouse-active')) { cx = tx; cy = ty; hero.classList.add('mouse-active'); }
+      tx = e.clientX; ty = e.clientY;
+      if (!light.classList.contains('on')) { cx = tx; cy = ty; light.classList.add('on'); }
       if (!running) { running = true; requestAnimationFrame(frame); }
     });
-    hero.addEventListener('pointerleave', () => hero.classList.remove('mouse-active'));
+    document.documentElement.addEventListener('mouseleave', () => light.classList.remove('on'));
+    window.addEventListener('scroll', syncScroll, { passive: true });
+    syncScroll();
   })();
 
   // --- Menú hamburguesa (mobile) ---
@@ -1957,12 +1917,6 @@
      LÓGICA CARRUSEL Y TIMELINE (TRAYECTORIA)
   ==================================================== */
   document.addEventListener("DOMContentLoaded", () => {
-    // ----------------------------------------------------
-    // CONSTANTE DE TIEMPO: AQUÍ MODIFICAS LOS 7 SEGUNDOS
-    // (7000 milisegundos = 7 Segundos)
-    // ----------------------------------------------------
-    const AUTOPLAY_INTERVAL_MS = 7000;
-
     const logros = [
       { piloto: "Martin Saa", cat: "Micro Max - Rotax Max Buenos Aires Otoño", fecha: "15-05-2022", img: "fotos/logros/martin_saa_trophy_1.jpg" },
       { piloto: "Francisco Figueroa", cat: "Junior MY10 - Campeonato Argentino de Karting", fecha: "06-08-2022", img: "fotos/logros/francisco_figueroa_trophy_1.jpg" },
@@ -1982,12 +1936,14 @@
       { piloto: "Valentino Manta", cat: "Junior Max - Gran Final Argentina", fecha: "12-10-2025", img: "fotos/logros/valentino_manta_trophy_1.jpg" }
     ];
 
-     const starNav = document.getElementById('t-stars-nav');
-    const carousel = document.getElementById('t-carousel-wrapper');
+    const matrix = document.getElementById('t-matrix');
     const progress = document.getElementById('t-timeline-progress');
     const markers = document.getElementById('t-timeline-markers');
+    if (!matrix) return;
 
-    if (!starNav || !carousel) return;
+    const PER_ROW = 8;
+    const mobileMQ = window.matchMedia('(max-width: 768px)');
+    const hoverMQ = window.matchMedia('(hover: hover)');
 
     // Timeline Boundaries
     const startDate = new Date(2022, 0, 1).getTime(); // Enero 1, 2022
@@ -2004,127 +1960,293 @@
     function getPercent(dateStr) {
       const time = parseDate(dateStr);
       let pct = ((time - startDate) / totalDuration) * 100;
-      return Math.max(0, Math.min(100, pct)); // Evita que se salga del 0-100%
+      return Math.max(0, Math.min(100, pct));
     }
 
-    // SVG Estrella Plana (2D)
-    const flatStarSVG = `
-      <svg viewBox="0 0 24 24" class="flat-star">
-        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke-linejoin="round"/>
-      </svg>
-    `;
+    const starSVG = `
+      <svg viewBox="0 0 24 24" class="t-cell-star" aria-hidden="true">
+        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+      </svg>`;
 
-    // 1. Construir las estrellas selectoras y los slides de fotos
-    const slideElements = [];
-    const starElements = [];
+    // 1. Construir la matriz: 2 filas de 8 cuadrados (logros 1-8 y 9-16)
+    const rows = [];
+    for (let r = 0; r < Math.ceil(logros.length / PER_ROW); r++) {
+      const row = document.createElement('div');
+      row.className = 't-row';
+      matrix.appendChild(row);
+      rows.push(row);
+    }
+
+    const cells = [];
+    let current = -1;
+
+    // En celular: centra el cuadrado activo dentro de la matriz que se desliza en horizontal
+    function centerOnMobile(index) {
+      const vw = window.innerWidth;
+      const cellW = vw * 0.31, openW = vw * 0.72, gap = 10;
+      const pad = parseFloat(getComputedStyle(matrix).paddingLeft) || 0;
+      const left = pad + (index % PER_ROW) * (cellW + gap) - (matrix.clientWidth - openW) / 2;
+      matrix.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
+    }
+
+    function setActive(index, center) {
+      if (index !== current) {
+        if (current >= 0) cells[current].classList.remove('active');
+        current = index;
+        cells[index].classList.add('active');
+        rows.forEach((row, ri) => row.classList.toggle('has-active', ri === Math.floor(index / PER_ROW)));
+        // Mover línea verde de la timeline
+        progress.style.width = `${getPercent(logros[index].fecha)}%`;
+      }
+      if (center && mobileMQ.matches) centerOnMobile(index);
+    }
 
     logros.forEach((data, index) => {
-      // Estrella
-      const starWrap = document.createElement('div');
-      starWrap.innerHTML = flatStarSVG;
-      const starNode = starWrap.firstElementChild;
-      
-      starNode.addEventListener('click', () => {
-        goToSlide(index);
+      const [d, m, y] = data.fecha.split('-');
+      const cell = document.createElement('div');
+      cell.className = 't-cell';
+      cell.tabIndex = 0;
+      cell.setAttribute('role', 'button');
+      cell.setAttribute('aria-label', `${data.piloto}, ${data.cat}, ${data.fecha}`);
+      cell.innerHTML = `
+        ${data.img ? `<img class="t-cell-img" src="${data.img}" alt="${data.piloto}" loading="lazy" decoding="async" draggable="false" onerror="this.style.display='none'">` : ''}
+        ${starSVG}
+        <div class="t-cell-info">
+          <div class="t-cell-fecha"><span class="d">${d}-${m}</span><span class="y">${y}</span></div>
+          <h3 class="t-cell-piloto">${data.piloto}</h3>
+          <div class="t-cell-cat">${data.cat}</div>
+        </div>`;
+
+      cell.addEventListener('mouseenter', () => { if (hoverMQ.matches) setActive(index, false); });
+      // Con mouse el hover ya expandió el cuadrado: el click abre la imagen grande.
+      // En táctil, el primer toque expande y el segundo (sobre el activo) abre la imagen grande.
+      cell.addEventListener('click', () => {
+        if (hoverMQ.matches || index === current) openLightbox(index, cell);
+        else setActive(index, true);
       });
-      starNav.appendChild(starNode);
-      starElements.push(starNode);
+      cell.addEventListener('focus', () => setActive(index, true));
+      cell.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(index, true); }
+      });
 
-      // Slide 
-      const slide = document.createElement('div');
-      slide.className = 't-slide';
-
-      const imgHtml = data.img 
-        ? `<img src="${data.img}" class="t-slide-bg" alt="${data.piloto}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-           <div class="t-slide-no-img" style="display:none;">Foto próximamente</div>`
-        : `<div class="t-slide-no-img">Foto próximamente</div>`;
-
-      const extraDescHtml = data.desc ? `<p class="t-slide-desc">${data.desc}</p>` : '';
-
-      slide.innerHTML = `
-        ${imgHtml}
-        <div class="t-slide-info-box">
-          <div class="t-slide-fecha">${data.fecha}</div>
-          <h3 class="t-slide-piloto">${data.piloto}</h3>
-          <div class="t-slide-cat">${data.cat}</div>
-          ${extraDescHtml}
-        </div>
-      `;
-      carousel.appendChild(slide);
-      slideElements.push(slide);
+      rows[Math.floor(index / PER_ROW)].appendChild(cell);
+      cells.push(cell);
     });
 
-    // 2. Construir marcas de la Línea de Tiempo (Años y Meses)
-    const currentYear = new Date().getFullYear();
-    for (let y = 2022; y <= currentYear; y++) {
-      // Marca de Año
-      let yTime = new Date(y, 0, 1).getTime();
-      if (yTime <= endDate) {
-        let pct = ((yTime - startDate) / totalDuration) * 100;
-        let tick = document.createElement('div');
-        tick.className = 'tl-tick-year';
-        tick.style.left = `${pct}%`;
-        tick.innerHTML = `<span>${y}</span>`;
-        markers.appendChild(tick);
-      }
-      
-      // Marcas de Meses (Pequeñas)
-      for (let m = 1; m < 12; m++) {
-        let mTime = new Date(y, m, 1).getTime();
-        if (mTime <= endDate) {
-           let mPct = ((mTime - startDate) / totalDuration) * 100;
-           let mTick = document.createElement('div');
-           mTick.className = 'tl-tick-month';
-           mTick.style.left = `${mPct}%`;
-           markers.appendChild(mTick);
+    // 2. Marcas de la Línea de Tiempo (Años y Meses), reutilizable para la línea del lightbox
+    function buildTicks(container) {
+      const currentYear = new Date().getFullYear();
+      for (let y = 2022; y <= currentYear; y++) {
+        // Marca de Año
+        let yTime = new Date(y, 0, 1).getTime();
+        if (yTime <= endDate) {
+          let pct = ((yTime - startDate) / totalDuration) * 100;
+          let tick = document.createElement('div');
+          tick.className = 'tl-tick-year';
+          tick.style.left = `${pct}%`;
+          tick.innerHTML = `<span>${y}</span>`;
+          container.appendChild(tick);
+        }
+
+        // Marcas de Meses (Pequeñas)
+        for (let m = 1; m < 12; m++) {
+          let mTime = new Date(y, m, 1).getTime();
+          if (mTime <= endDate) {
+            let mPct = ((mTime - startDate) / totalDuration) * 100;
+            let mTick = document.createElement('div');
+            mTick.className = 'tl-tick-month';
+            mTick.style.left = `${mPct}%`;
+            container.appendChild(mTick);
+          }
         }
       }
     }
+    buildTicks(markers);
 
-    // 3. Lógica del Autoplay
-    let currentIndex = 0;
-    let autoplayTimer;
+    // 3. Estado inicial: primer logro expandido
+    setActive(0, false);
 
-    function goToSlide(index) {
-      // Reset estilos viejos
-      slideElements[currentIndex].classList.remove('active');
-      starElements[currentIndex].classList.remove('active');
+    // 4. Lightbox: imagen grande con flechas a los lados y la línea temporal debajo
+    const lb = document.getElementById('t-lightbox');
+    const lbImg = lb.querySelector('.lb-img');
+    const lbProgress = lb.querySelector('.lb-tl-progress');
+    buildTicks(lb.querySelector('.lb-tl-markers'));
+    let lbIndex = 0, lbIsOpen = false, touchX = null;
 
-      currentIndex = index;
-
-      // Sincroniza la duración del paneo de la imagen con el intervalo real de autoplay,
-      // así el desplazamiento vertical siempre termina justo cuando cambia el logro
-      slideElements[currentIndex].style.setProperty('--pan-duration', `${AUTOPLAY_INTERVAL_MS}ms`);
-
-      // Aplicar estilos nuevos
-      slideElements[currentIndex].classList.add('active');
-      starElements[currentIndex].classList.add('active');
-
-      // Mover línea verde
-      const targetPct = getPercent(logros[currentIndex].fecha);
-      progress.style.width = `${targetPct}%`;
-
-      // Reiniciar timer (pausa de 7 seg tras clic)
-      resetTimer();
+    function lbRender(index) {
+      lbIndex = (index + logros.length) % logros.length;
+      const d = logros[lbIndex];
+      lbImg.classList.remove('show');
+      lbImg.onload = () => lbImg.classList.add('show');
+      lbImg.src = d.img;
+      lbImg.alt = d.piloto;
+      lb.querySelector('.lb-fecha').textContent = d.fecha;
+      lb.querySelector('.lb-piloto').textContent = d.piloto;
+      lb.querySelector('.lb-cat').textContent = d.cat;
+      lb.querySelector('.lb-count').textContent = `${lbIndex + 1} / ${logros.length}`;
+      lbProgress.style.width = `${getPercent(d.fecha)}%`;
+      // Mantener la matriz sincronizada con el logro visible
+      setActive(lbIndex, false);
+      // Precarga de vecinos
+      [lbIndex - 1, lbIndex + 1].forEach(n => { const i = new Image(); i.src = logros[(n + logros.length) % logros.length].img; });
     }
 
-    function nextSlide() {
-      let next = (currentIndex + 1) % logros.length;
-      goToSlide(next);
+    function openLightbox(index) {
+      lbIsOpen = true;
+      lockScroll();
+      lb.hidden = false;
+      requestAnimationFrame(() => lb.classList.add('open'));
+      lbRender(index);
+      lb.querySelector('.lb-close').focus({ preventScroll: true });
     }
 
-    function resetTimer() {
-      clearInterval(autoplayTimer);
-      autoplayTimer = setInterval(nextSlide, AUTOPLAY_INTERVAL_MS);
+    function closeLightbox() {
+      if (!lbIsOpen) return;
+      lbIsOpen = false;
+      lb.classList.remove('open');
+      setTimeout(() => { if (!lbIsOpen) { lb.hidden = true; unlockScroll(); } }, 280);
+      cells[lbIndex].focus({ preventScroll: true });
     }
 
-    // Iniciar con la primera imagen
-    if (logros.length > 0) {
-      goToSlide(0);
-    }
-
+    lb.querySelector('.lb-close').addEventListener('click', closeLightbox);
+    lb.querySelector('.lb-backdrop').addEventListener('click', closeLightbox);
+    lb.querySelector('.lb-stage').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeLightbox(); });
+    lb.querySelector('.lb-prev').addEventListener('click', () => lbRender(lbIndex - 1));
+    lb.querySelector('.lb-next').addEventListener('click', () => lbRender(lbIndex + 1));
+    document.addEventListener('keydown', (e) => {
+      if (!lbIsOpen) return;
+      if (e.key === 'Escape') closeLightbox();
+      else if (e.key === 'ArrowLeft') lbRender(lbIndex - 1);
+      else if (e.key === 'ArrowRight') lbRender(lbIndex + 1);
+    });
+    // Deslizar con el dedo para avanzar / retroceder
+    lb.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', (e) => {
+      if (touchX === null) return;
+      const dx = e.changedTouches[0].clientX - touchX;
+      touchX = null;
+      if (Math.abs(dx) > 50) lbRender(lbIndex + (dx < 0 ? 1 : -1));
+    }, { passive: true });
   });
 
+
+
+  /* ====================================================
+     EXPANDABLE SCREEN (contacto)
+     Réplica vanilla del componente de cult-ui: el botón que se toca se transforma
+     (posición, tamaño, radio y color) en una pantalla grande; al cerrar vuelve al botón.
+  ==================================================== */
+  document.addEventListener('DOMContentLoaded', () => {
+    const triggers = document.querySelectorAll('a[href="#contacto"]');
+    const source = document.querySelector('#contacto .contacto-grid');
+    const root = document.getElementById('xs-root');
+    if (!triggers.length || !source || !root) return;
+
+    const panel = root.querySelector('.xs-panel');
+    const content = root.querySelector('.xs-content');
+    const closeBtn = root.querySelector('.xs-close');
+    const backdrop = root.querySelector('.xs-backdrop');
+
+    // El contenido de la pantalla es una copia del bloque de contacto de la página
+    const clone = source.cloneNode(true);
+    clone.classList.remove('reveal');
+    content.appendChild(clone);
+
+    const DURATION = 480;
+    const EASING = 'cubic-bezier(0.32, 0.72, 0, 1)'; // salida suave, tipo spring
+    const CONTENT_RADIUS = 24;
+    let isOpen = false, current = null, anim = null;
+
+    const inset = () => (window.innerWidth <= 768 ? 8 : 14);
+    function finalRect() {
+      const i = inset();
+      return { top: i, left: i, width: window.innerWidth - 2 * i, height: window.innerHeight - 2 * i };
+    }
+    function applyRect(r) {
+      panel.style.top = r.top + 'px'; panel.style.left = r.left + 'px';
+      panel.style.width = r.width + 'px'; panel.style.height = r.height + 'px';
+      content.style.width = r.width + 'px'; content.style.height = r.height + 'px';
+    }
+    const frame = (r, radius, bg) => ({
+      top: r.top + 'px', left: r.left + 'px', width: r.width + 'px', height: r.height + 'px',
+      borderRadius: radius + 'px', backgroundColor: bg
+    });
+    function triggerRect(el) {
+      // En celular el botón del menú queda oculto al cerrar: se usa la hamburguesa como origen
+      let r = el.getBoundingClientRect();
+      const hb = document.querySelector('.hamburger');
+      if (el.closest('.nav-links') && hb && getComputedStyle(hb).display !== 'none') r = hb.getBoundingClientRect();
+      return r;
+    }
+
+    function open(trigger) {
+      if (isOpen) return;
+      isOpen = true; current = trigger;
+      const r = trigger.getBoundingClientRect();
+      const cs = getComputedStyle(trigger);
+      let startBg = cs.backgroundColor;
+      if (startBg === 'rgba(0, 0, 0, 0)' || startBg === 'transparent') startBg = 'rgba(57,255,20,0.2)';
+      const startRadius = parseFloat(cs.borderTopLeftRadius) || 8;
+
+      // Si se abrió desde el menú móvil, se cierra el menú
+      const links = document.querySelector('.nav-links');
+      if (links && links.classList.contains('open') && typeof toggleMenu === 'function') toggleMenu();
+
+      lockScroll();
+      const target = finalRect();
+      root.hidden = false;
+      applyRect(target);
+      panel.style.borderRadius = CONTENT_RADIUS + 'px';
+      content.scrollTop = 0;
+      trigger.style.visibility = 'hidden';
+
+      if (anim) anim.cancel();
+      anim = panel.animate([frame(r, startRadius, startBg), frame(target, CONTENT_RADIUS, '#0c0c0c')], { duration: DURATION, easing: EASING });
+      backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration: DURATION, easing: 'ease-out' });
+      requestAnimationFrame(() => root.classList.add('show'));
+      closeBtn.focus({ preventScroll: true });
+    }
+
+    function close() {
+      if (!isOpen) return;
+      isOpen = false;
+      root.classList.remove('show');
+      const from = panel.getBoundingClientRect();
+      const trigger = current;
+      const r = triggerRect(trigger);
+      const cs = getComputedStyle(trigger);
+      let endBg = cs.backgroundColor;
+      if (endBg === 'rgba(0, 0, 0, 0)' || endBg === 'transparent') endBg = 'rgba(57,255,20,0.2)';
+      const endRadius = parseFloat(cs.borderTopLeftRadius) || 8;
+
+      if (anim) anim.cancel();
+      anim = panel.animate([frame(from, CONTENT_RADIUS, '#0c0c0c'), frame(r, endRadius, endBg)], { duration: DURATION * 0.85, easing: EASING, fill: 'forwards' });
+      const bd = backdrop.animate([{ opacity: 1 }, { opacity: 0 }], { duration: DURATION * 0.85, fill: 'forwards' });
+      anim.onfinish = () => {
+        root.hidden = true;
+        anim.cancel(); bd.cancel();
+        trigger.style.visibility = '';
+        unlockScroll();
+        trigger.focus({ preventScroll: true });
+      };
+    }
+
+    triggers.forEach(t => t.addEventListener('click', (e) => { e.preventDefault(); open(t); }));
+    closeBtn.addEventListener('click', close);
+    backdrop.addEventListener('click', close);
+    window.addEventListener('resize', () => { if (isOpen && (!anim || anim.playState !== 'running')) applyRect(finalRect()); });
+    document.addEventListener('keydown', (e) => {
+      if (!isOpen) return;
+      if (e.key === 'Escape') { close(); return; }
+      if (e.key === 'Tab') {            // el foco se queda dentro de la pantalla
+        const f = [...root.querySelectorAll('a[href], button, input, select, textarea')].filter(el => !el.disabled && el.offsetParent !== null);
+        if (!f.length) return;
+        const first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+  });
 
   /* ====================================================
      Lógica de Selección y Cierre Universal (Global Click para Pilotos y Media)
